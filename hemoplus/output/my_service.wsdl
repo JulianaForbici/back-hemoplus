@@ -1,0 +1,3499 @@
+<wsdl:definitions name="my_service"
+      targetNamespace="http://www.senior.com.br/my_domain/my_service"
+      xmlns="http://www.senior.com.br/my_domain/my_service"
+      xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+      xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+      xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+      xmlns:http="http://schemas.xmlsoap.org/wsdl/http/">
+    
+    <version number="${version}" />
+    
+    <wsdl:types>
+        <xsd:schema
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.senior.com.br/my_domain/my_service"
+            targetNamespace="http://www.senior.com.br/my_domain/my_service"
+            elementFormDefault="qualified">
+            
+            <xsd:attribute name="deprecated" type="xsd:string" default=""/>
+            <xsd:attribute name="anonymous" type="xsd:boolean" default="false"/>
+            
+            <xsd:attribute name="i18n" type="xsd:boolean" default="false"/>
+            
+            <!-- Public types -->
+            <xsd:simpleType name="fatorRh">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="NEGATIVO"/>
+                    <xsd:enumeration value="POSITIVO"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="tipoSangue">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="A"/>
+                    <xsd:enumeration value="B"/>
+                    <xsd:enumeration value="AB"/>
+                    <xsd:enumeration value="O"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="tipoUsuario">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="DOADOR"/>
+                    <xsd:enumeration value="ADMIN"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="statusAgendamento">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="PENDENTE"/>
+                    <xsd:enumeration value="CONFIRMADO"/>
+                    <xsd:enumeration value="CANCELADO"/>
+                    <xsd:enumeration value="COMPARECEU"/>
+                    <xsd:enumeration value="NAO_COMPARECEU"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:complexType name="retorno">
+                <xsd:sequence>
+                    <xsd:element name="mensagem" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="codigo" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="contemErro" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="false" readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="pontoMapa">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="tipo" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="nome" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="latitude" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="longitude" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="dadosMapa">
+                <xsd:sequence>
+                    <xsd:element name="usuario" type="pontoMapa" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for hemocentros -->
+                    <xsd:element name="hemocentros" minOccurs="1" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="pontoMapa" minOccurs="1" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="dashboardResumoAgendamentos">
+                <xsd:sequence>
+                    <xsd:element name="total" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="pendentes" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="confirmados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="cancelados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="compareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="naoCompareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="taxaComparecimento" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="dashboardSerieDia">
+                <xsd:sequence>
+                    <xsd:element name="dia" type="xsd:date" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="total" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="confirmados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="cancelados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="compareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="naoCompareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="usuario">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="nomeCompleto"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="80" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="email"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="120" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="telefone"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="20" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="cpf"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="11" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="dataNascimento" type="xsd:date" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="ativo" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="true" readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="dataCadastro" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for agendamentos -->
+                    <xsd:element name="agendamentos" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="agendamento" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <!-- collection wrapper for doacoes -->
+                    <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="latitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="longitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="usuarioCloud"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="120" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="tipoUsuario" type="tipoUsuario" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="cep"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="9" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="rua"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="80" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="numero"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="10" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="complemento"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="60" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="bairro"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="40" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="cidade"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="40" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="uf"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="2" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="hemocentro">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="nome"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="60" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="rua"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="60" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="numero"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="10" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="bairro"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="40" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="cidade"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="40" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="uf"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="2" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="cep"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="9" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="latitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="longitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="telefone"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="20" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="ativo" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="true" readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for agendamentos -->
+                    <xsd:element name="agendamentos" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="agendamento" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <!-- collection wrapper for doacoes -->
+                    <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <!-- collection wrapper for estoques -->
+                    <xsd:element name="estoques" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="estoque" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="agendamento">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="dataHora" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="status" type="statusAgendamento" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="observacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="150" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="motivoStatus"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="150" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="dataCriacao" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="dataAtualizacao" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="token"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="80" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="tokenExpiraEm" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="tokenUsadoEm" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for doacoes -->
+                    <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="doacao">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="dataHoraConfirmacao" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="responsavelValidacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:string">
+                    		<xsd:maxLength value="55" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="estoque">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="quantidadeMl"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:long">
+                    		<xsd:minInclusive value="0" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="minimoMl"  minOccurs="1" maxOccurs="1"  readOnly="false">
+                    <xsd:simpleType>
+                    	<xsd:restriction base="xsd:long">
+                    		<xsd:minInclusive value="0" />
+                    	</xsd:restriction>
+                    </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="dataAtualizacao" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:simpleType name="userNotificationKind">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Operational"/>
+                    <xsd:enumeration value="Management"/>
+                    <xsd:enumeration value="News"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="userNotificationPriority">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Error"/>
+                    <xsd:enumeration value="Alert"/>
+                    <xsd:enumeration value="None"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:complexType name="notifyUserEventPayload">
+                <xsd:sequence>
+                    <xsd:element name="notificationClass" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="notificationOrigin" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="notificationKind" type="userNotificationKind" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="notificationPriority" type="userNotificationPriority" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="notificationSubject" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="notificationContent" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="sourceDomain" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="sourceService" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="destinationUser" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="link" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:simpleType name="eventEmailFormat">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="HTML"/>
+                    <xsd:enumeration value="PLAIN_TEXT"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:complexType name="emailNotifyUserEventPayload">
+                <xsd:complexContent>
+                    <xsd:extension base="notifyUserEventPayload">
+                        <xsd:sequence>
+                            <xsd:element name="from" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                            </xsd:element>
+                            <!-- collection wrapper for sendTo -->
+                            <xsd:element name="sendTo" minOccurs="0" maxOccurs="1">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="format" type="eventEmailFormat" minOccurs="0" maxOccurs="1"  readOnly="false">
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="pushNotifyUserEventPayload">
+                <xsd:complexContent>
+                    <xsd:extension base="notifyUserEventPayload">
+                        <xsd:sequence>
+                            <xsd:element name="applicationId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="blobReference">
+                <xsd:sequence>
+                    <xsd:element name="domainName" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="serviceName" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="targetObjectId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="targetCopyId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="basicErrorPayload">
+                <xsd:sequence>
+                    <xsd:element name="message" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorCode" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:simpleType name="fieldType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="BINARY"/>
+                    <xsd:enumeration value="BOOLEAN"/>
+                    <xsd:enumeration value="DATE"/>
+                    <xsd:enumeration value="DATETIME"/>
+                    <xsd:enumeration value="LOCALDATETIME"/>
+                    <xsd:enumeration value="DOUBLE"/>
+                    <xsd:enumeration value="ENUM"/>
+                    <xsd:enumeration value="INTEGER"/>
+                    <xsd:enumeration value="MONEY"/>
+                    <xsd:enumeration value="STRING"/>
+                    <xsd:enumeration value="TIME"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="fileFormat">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="CSV"/>
+                    <xsd:enumeration value="FLAT"/>
+                    <xsd:enumeration value="JSON"/>
+                    <xsd:enumeration value="XML"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="hookFunction">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="BEFORE_PARSE"/>
+                    <xsd:enumeration value="BEFORE_CONVERSION"/>
+                    <xsd:enumeration value="ON_ERROR"/>
+                    <xsd:enumeration value="VALIDATE"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="eventType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="CHUNK"/>
+                    <xsd:enumeration value="DOWNLOAD"/>
+                    <xsd:enumeration value="ERROR"/>
+                    <xsd:enumeration value="FINISH"/>
+                    <xsd:enumeration value="START"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="errorStrategy">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="CALL_SCRIPT"/>
+                    <xsd:enumeration value="IGNORE"/>
+                    <xsd:enumeration value="STOP"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="status">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="DONE"/>
+                    <xsd:enumeration value="DONE_WITH_ERRORS"/>
+                    <xsd:enumeration value="DOWNLOADING"/>
+                    <xsd:enumeration value="ERROR"/>
+                    <xsd:enumeration value="NOT_STARTED"/>
+                    <xsd:enumeration value="RUNNING"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:simpleType name="errorType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="CONVERT_ERROR"/>
+                    <xsd:enumeration value="SERVICE_ERROR"/>
+                </xsd:restriction>
+             </xsd:simpleType>
+            <xsd:complexType name="importError">
+                <xsd:sequence>
+                    <xsd:element name="errorType" type="errorType" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="lineNumber" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="bean" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="message" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="exceptionClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="fielddto">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="fieldType" type="fieldType" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="start" type="xsd:long" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="size" type="xsd:long" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="maskPattern" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="hookdto">
+                <xsd:sequence>
+                    <xsd:element name="hookFunction" type="hookFunction" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="script" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="layoutdto">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="fileFormat" type="fileFormat" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorStrategy" type="errorStrategy" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="delimiter" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="skipLines" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for fields -->
+                    <xsd:element name="fields" minOccurs="1" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="fielddto" minOccurs="1" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <!-- collection wrapper for hooks -->
+                    <xsd:element name="hooks" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="hookdto" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="importReport">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="startTime" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="endTime" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="beanClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="serviceClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="sucessCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorsCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="filteredCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="skippedCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for importErrors -->
+                    <xsd:element name="importErrors" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="importError" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="exportEventStatus">
+                <xsd:sequence>
+                    <xsd:element name="importerId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="eventType" type="eventType" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="recordCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="importEventStatus">
+                <xsd:sequence>
+                    <xsd:element name="importerId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="eventType" type="eventType" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="status" type="status" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="recordCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="importReport" type="importReport" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="exportConfig">
+                <xsd:sequence>
+                    <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="async" type="xsd:boolean" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorStrategy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="importConfig">
+                <xsd:sequence>
+                    <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="async" type="xsd:boolean" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="batchSize" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="errorStrategy" type="errorStrategy" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="dependency">
+                <xsd:sequence>
+                    <xsd:element name="domain" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="service" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <xsd:element name="version" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:simpleType name="uuid">
+                <xsd:restriction base="xsd:string">
+                	<xsd:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+                </xsd:restriction>
+             </xsd:simpleType>
+            
+            <!-- Message payload elements for signals -->
+            
+            <!-- Message input/output elements for commands -->
+            <xsd:element name="createBulkAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for entities -->
+                        <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkAgendamentoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="marcarNaoCompareceuPorPeriodo">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="agendamentoId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="marcarNaoCompareceuPorPeriodoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="confirmarAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="agendamentoId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="confirmarAgendamentoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateUsuario_Agendamentos">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createMergeUsuario">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="listHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listHemocentroOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="hemocentro" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarTiposEmFalta">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarTiposEmFaltaOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for resultado -->
+                        <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="validarDoacaoPorToken">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="token"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                        <xsd:simpleType>
+                        	<xsd:restriction base="xsd:string">
+                        		<xsd:maxLength value="80" />
+                        	</xsd:restriction>
+                        </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="responsavelValidacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                        <xsd:simpleType>
+                        	<xsd:restriction base="xsd:string">
+                        		<xsd:maxLength value="55" />
+                        	</xsd:restriction>
+                        </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="validarDoacaoPorTokenOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="doacao" type="doacao" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateDoacao">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="deleteUsuario_Agendamentos" type="uuid"/>
+            <xsd:element name="updateMergeDoacao">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="updateEstoque">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createAgendamento">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createUsuario_Agendamentos">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="updateHemocentro">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="updateAgendamento">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createMergeHemocentro">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="deleteHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createMergeUsuario_Agendamentos">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="listUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listUsuarioOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="usuario" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listAgendamentoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getMetadata">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="metadataFormat" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getMetadataOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="metadata" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateMergeAgendamento_Doacoes">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="updateMergeAgendamento">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createMergeDoacao">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createBulkUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for entities -->
+                        <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="usuario" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkUsuarioOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="retrieveEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createHemocentro">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="deleteDoacao">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="retrieveAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createMergeEstoque">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="updateAgendamento_Doacoes">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="importEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="importEstoqueOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="deleteEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listEstoqueOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarPontosMapa">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarPontosMapaOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="dados" type="dadosMapa" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="helloWorld">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="who" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="helloWorldOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="helloWorldMessage" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="buscarDashboardResumoAgendamentos">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="buscarDashboardResumoAgendamentosOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="resumo" type="dashboardResumoAgendamentos" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="buscarDashboardSerieAgendamentosPorDia">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="buscarDashboardSerieAgendamentosPorDiaOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for itens -->
+                        <xsd:element name="itens" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="dashboardSerieDia" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listDoacao">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listDoacaoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createMergeAgendamento_Doacoes">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createEstoque">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="listAgendamento_Doacoes">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listAgendamento_DoacoesOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ajustarEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="fatorRh" type="fatorRh" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="deltaMl" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="minimoMl" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ajustarEstoqueOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="estoque" type="estoque" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateUsuario">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="exportHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="exportHemocentroOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="odata">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createDoacao">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="listarAgendamentosPorPeriodo">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="status" type="statusAgendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarAgendamentosPorPeriodoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for resultado -->
+                        <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateMergeUsuario_Agendamentos">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="retrieveAgendamento_Doacoes" type="uuid"/>
+            <xsd:element name="importUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="importUsuarioOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="criarAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="dataHora" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="observacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                        <xsd:simpleType>
+                        	<xsd:restriction base="xsd:string">
+                        		<xsd:maxLength value="150" />
+                        	</xsd:restriction>
+                        </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="criarAgendamentoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateMergeEstoque">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createBulkHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for entities -->
+                        <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="hemocentro" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkHemocentroOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="deleteUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="exportEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="exportEstoqueOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getDependencies">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="getDependenciesOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for dependencies -->
+                        <xsd:element name="dependencies" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="dependency" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarEstoquePorHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listarEstoquePorHemocentroOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for resultado -->
+                        <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="retrieveDoacao">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkDoacao">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for entities -->
+                        <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkDoacaoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateMergeUsuario">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="importHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="importHemocentroOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="deleteAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createMergeAgendamento">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="buscarUsuarioCloud">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="usuarioCloud" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="buscarUsuarioCloudOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="cancelarAgendamento">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="agendamentoId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="motivo"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                        <xsd:simpleType>
+                        	<xsd:restriction base="xsd:string">
+                        		<xsd:maxLength value="150" />
+                        	</xsd:restriction>
+                        </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="cancelarAgendamentoOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createUsuario">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="createBulkEstoque">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for entities -->
+                        <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createBulkEstoqueOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="createAgendamento_Doacoes">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="deleteAgendamento_Doacoes" type="uuid"/>
+            <xsd:element name="retrieveUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="exportUsuario">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="exportUsuarioOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="updateMergeHemocentro">
+                <xsd:complexType/>
+            </xsd:element>
+            <xsd:element name="listUsuario_Agendamentos">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                        <!-- collection wrapper for displayFields -->
+                        <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listUsuario_AgendamentosOutput">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- collection wrapper for contents -->
+                        <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="retrieveUsuario_Agendamentos" type="uuid"/>
+            <xsd:element name="retrieveHemocentro">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    
+    <wsdl:message name="createBulkAgendamentoRequest">
+        <wsdl:part name="parameters" element="createBulkAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkAgendamentoResponse">
+        <wsdl:part name="result" element="createBulkAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="marcarNaoCompareceuPorPeriodoRequest">
+        <wsdl:part name="parameters" element="marcarNaoCompareceuPorPeriodo"/>
+    </wsdl:message>
+    <wsdl:message name="marcarNaoCompareceuPorPeriodoResponse">
+        <wsdl:part name="result" element="marcarNaoCompareceuPorPeriodoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="confirmarAgendamentoRequest">
+        <wsdl:part name="parameters" element="confirmarAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="confirmarAgendamentoResponse">
+        <wsdl:part name="result" element="confirmarAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateUsuario_AgendamentosRequest">
+        <wsdl:part name="toUpdate" element="updateUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="updateUsuario_AgendamentosResponse">
+        <wsdl:part name="updated" element="updateUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeUsuarioRequest">
+        <wsdl:part name="parameters" element="createMergeUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeUsuarioResponse">
+        <wsdl:part name="result" element="createMergeUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listHemocentroRequest">
+        <wsdl:part name="pageRequest" element="listHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="listHemocentroResponse">
+        <wsdl:part name="pagedResults" element="listHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listarTiposEmFaltaRequest">
+        <wsdl:part name="parameters" element="listarTiposEmFalta"/>
+    </wsdl:message>
+    <wsdl:message name="listarTiposEmFaltaResponse">
+        <wsdl:part name="result" element="listarTiposEmFaltaOutput"/>
+    </wsdl:message>
+    <wsdl:message name="validarDoacaoPorTokenRequest">
+        <wsdl:part name="parameters" element="validarDoacaoPorToken"/>
+    </wsdl:message>
+    <wsdl:message name="validarDoacaoPorTokenResponse">
+        <wsdl:part name="result" element="validarDoacaoPorTokenOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateDoacaoRequest">
+        <wsdl:part name="toUpdate" element="updateDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="updateDoacaoResponse">
+        <wsdl:part name="updated" element="updateDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteUsuario_AgendamentosRequest">
+        <wsdl:part name="toDelete" element="deleteUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeDoacaoRequest">
+        <wsdl:part name="parameters" element="updateMergeDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeDoacaoResponse">
+        <wsdl:part name="result" element="updateMergeDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateEstoqueRequest">
+        <wsdl:part name="toUpdate" element="updateEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="updateEstoqueResponse">
+        <wsdl:part name="updated" element="updateEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createAgendamentoRequest">
+        <wsdl:part name="toCreate" element="createAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="createAgendamentoResponse">
+        <wsdl:part name="created" element="createAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createUsuario_AgendamentosRequest">
+        <wsdl:part name="toCreate" element="createUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="createUsuario_AgendamentosResponse">
+        <wsdl:part name="created" element="createUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateHemocentroRequest">
+        <wsdl:part name="toUpdate" element="updateHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="updateHemocentroResponse">
+        <wsdl:part name="updated" element="updateHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateAgendamentoRequest">
+        <wsdl:part name="toUpdate" element="updateAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="updateAgendamentoResponse">
+        <wsdl:part name="updated" element="updateAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeHemocentroRequest">
+        <wsdl:part name="parameters" element="createMergeHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeHemocentroResponse">
+        <wsdl:part name="result" element="createMergeHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteHemocentroRequest">
+        <wsdl:part name="toDelete" element="deleteHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeUsuario_AgendamentosRequest">
+        <wsdl:part name="parameters" element="createMergeUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeUsuario_AgendamentosResponse">
+        <wsdl:part name="result" element="createMergeUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listUsuarioRequest">
+        <wsdl:part name="pageRequest" element="listUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="listUsuarioResponse">
+        <wsdl:part name="pagedResults" element="listUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listAgendamentoRequest">
+        <wsdl:part name="pageRequest" element="listAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="listAgendamentoResponse">
+        <wsdl:part name="pagedResults" element="listAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="getMetadataRequest">
+        <wsdl:part name="parameters" element="getMetadata"/>
+    </wsdl:message>
+    <wsdl:message name="getMetadataResponse">
+        <wsdl:part name="result" element="getMetadataOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeAgendamento_DoacoesRequest">
+        <wsdl:part name="parameters" element="updateMergeAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeAgendamento_DoacoesResponse">
+        <wsdl:part name="result" element="updateMergeAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeAgendamentoRequest">
+        <wsdl:part name="parameters" element="updateMergeAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeAgendamentoResponse">
+        <wsdl:part name="result" element="updateMergeAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeDoacaoRequest">
+        <wsdl:part name="parameters" element="createMergeDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeDoacaoResponse">
+        <wsdl:part name="result" element="createMergeDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkUsuarioRequest">
+        <wsdl:part name="parameters" element="createBulkUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkUsuarioResponse">
+        <wsdl:part name="result" element="createBulkUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveEstoqueRequest">
+        <wsdl:part name="toRetrieve" element="retrieveEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveEstoqueResponse">
+        <wsdl:part name="retrieved" element="retrieveEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createHemocentroRequest">
+        <wsdl:part name="toCreate" element="createHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="createHemocentroResponse">
+        <wsdl:part name="created" element="createHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteDoacaoRequest">
+        <wsdl:part name="toDelete" element="deleteDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveAgendamentoRequest">
+        <wsdl:part name="toRetrieve" element="retrieveAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveAgendamentoResponse">
+        <wsdl:part name="retrieved" element="retrieveAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeEstoqueRequest">
+        <wsdl:part name="parameters" element="createMergeEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeEstoqueResponse">
+        <wsdl:part name="result" element="createMergeEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateAgendamento_DoacoesRequest">
+        <wsdl:part name="toUpdate" element="updateAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="updateAgendamento_DoacoesResponse">
+        <wsdl:part name="updated" element="updateAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="importEstoqueRequest">
+        <wsdl:part name="parameters" element="importEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="importEstoqueResponse">
+        <wsdl:part name="result" element="importEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteEstoqueRequest">
+        <wsdl:part name="toDelete" element="deleteEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="listEstoqueRequest">
+        <wsdl:part name="pageRequest" element="listEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="listEstoqueResponse">
+        <wsdl:part name="pagedResults" element="listEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listarPontosMapaRequest">
+        <wsdl:part name="parameters" element="listarPontosMapa"/>
+    </wsdl:message>
+    <wsdl:message name="listarPontosMapaResponse">
+        <wsdl:part name="result" element="listarPontosMapaOutput"/>
+    </wsdl:message>
+    <wsdl:message name="helloWorldRequest">
+        <wsdl:part name="parameters" element="helloWorld"/>
+    </wsdl:message>
+    <wsdl:message name="helloWorldResponse">
+        <wsdl:part name="result" element="helloWorldOutput"/>
+    </wsdl:message>
+    <wsdl:message name="buscarDashboardResumoAgendamentosRequest">
+        <wsdl:part name="parameters" element="buscarDashboardResumoAgendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="buscarDashboardResumoAgendamentosResponse">
+        <wsdl:part name="result" element="buscarDashboardResumoAgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="buscarDashboardSerieAgendamentosPorDiaRequest">
+        <wsdl:part name="parameters" element="buscarDashboardSerieAgendamentosPorDia"/>
+    </wsdl:message>
+    <wsdl:message name="buscarDashboardSerieAgendamentosPorDiaResponse">
+        <wsdl:part name="result" element="buscarDashboardSerieAgendamentosPorDiaOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listDoacaoRequest">
+        <wsdl:part name="pageRequest" element="listDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="listDoacaoResponse">
+        <wsdl:part name="pagedResults" element="listDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeAgendamento_DoacoesRequest">
+        <wsdl:part name="parameters" element="createMergeAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeAgendamento_DoacoesResponse">
+        <wsdl:part name="result" element="createMergeAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createEstoqueRequest">
+        <wsdl:part name="toCreate" element="createEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="createEstoqueResponse">
+        <wsdl:part name="created" element="createEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listAgendamento_DoacoesRequest">
+        <wsdl:part name="pageRequest" element="listAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="listAgendamento_DoacoesResponse">
+        <wsdl:part name="pagedResults" element="listAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="ajustarEstoqueRequest">
+        <wsdl:part name="parameters" element="ajustarEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="ajustarEstoqueResponse">
+        <wsdl:part name="result" element="ajustarEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateUsuarioRequest">
+        <wsdl:part name="toUpdate" element="updateUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="updateUsuarioResponse">
+        <wsdl:part name="updated" element="updateUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="exportHemocentroRequest">
+        <wsdl:part name="parameters" element="exportHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="exportHemocentroResponse">
+        <wsdl:part name="result" element="exportHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="odataRequest">
+        <wsdl:part name="parameters" element="odata"/>
+    </wsdl:message>
+    <wsdl:message name="odataResponse">
+        <wsdl:part name="result" element="odataOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createDoacaoRequest">
+        <wsdl:part name="toCreate" element="createDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="createDoacaoResponse">
+        <wsdl:part name="created" element="createDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listarAgendamentosPorPeriodoRequest">
+        <wsdl:part name="parameters" element="listarAgendamentosPorPeriodo"/>
+    </wsdl:message>
+    <wsdl:message name="listarAgendamentosPorPeriodoResponse">
+        <wsdl:part name="result" element="listarAgendamentosPorPeriodoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeUsuario_AgendamentosRequest">
+        <wsdl:part name="parameters" element="updateMergeUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeUsuario_AgendamentosResponse">
+        <wsdl:part name="result" element="updateMergeUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveAgendamento_DoacoesRequest">
+        <wsdl:part name="toRetrieve" element="retrieveAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveAgendamento_DoacoesResponse">
+        <wsdl:part name="retrieved" element="retrieveAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="importUsuarioRequest">
+        <wsdl:part name="parameters" element="importUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="importUsuarioResponse">
+        <wsdl:part name="result" element="importUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="criarAgendamentoRequest">
+        <wsdl:part name="parameters" element="criarAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="criarAgendamentoResponse">
+        <wsdl:part name="result" element="criarAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeEstoqueRequest">
+        <wsdl:part name="parameters" element="updateMergeEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeEstoqueResponse">
+        <wsdl:part name="result" element="updateMergeEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkHemocentroRequest">
+        <wsdl:part name="parameters" element="createBulkHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkHemocentroResponse">
+        <wsdl:part name="result" element="createBulkHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteUsuarioRequest">
+        <wsdl:part name="toDelete" element="deleteUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="exportEstoqueRequest">
+        <wsdl:part name="parameters" element="exportEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="exportEstoqueResponse">
+        <wsdl:part name="result" element="exportEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="getDependenciesRequest">
+        <wsdl:part name="parameters" element="getDependencies"/>
+    </wsdl:message>
+    <wsdl:message name="getDependenciesResponse">
+        <wsdl:part name="result" element="getDependenciesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listarEstoquePorHemocentroRequest">
+        <wsdl:part name="parameters" element="listarEstoquePorHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="listarEstoquePorHemocentroResponse">
+        <wsdl:part name="result" element="listarEstoquePorHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveDoacaoRequest">
+        <wsdl:part name="toRetrieve" element="retrieveDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveDoacaoResponse">
+        <wsdl:part name="retrieved" element="retrieveDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkDoacaoRequest">
+        <wsdl:part name="parameters" element="createBulkDoacao"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkDoacaoResponse">
+        <wsdl:part name="result" element="createBulkDoacaoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeUsuarioRequest">
+        <wsdl:part name="parameters" element="updateMergeUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeUsuarioResponse">
+        <wsdl:part name="result" element="updateMergeUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="importHemocentroRequest">
+        <wsdl:part name="parameters" element="importHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="importHemocentroResponse">
+        <wsdl:part name="result" element="importHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteAgendamentoRequest">
+        <wsdl:part name="toDelete" element="deleteAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeAgendamentoRequest">
+        <wsdl:part name="parameters" element="createMergeAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="createMergeAgendamentoResponse">
+        <wsdl:part name="result" element="createMergeAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="buscarUsuarioCloudRequest">
+        <wsdl:part name="parameters" element="buscarUsuarioCloud"/>
+    </wsdl:message>
+    <wsdl:message name="buscarUsuarioCloudResponse">
+        <wsdl:part name="result" element="buscarUsuarioCloudOutput"/>
+    </wsdl:message>
+    <wsdl:message name="cancelarAgendamentoRequest">
+        <wsdl:part name="parameters" element="cancelarAgendamento"/>
+    </wsdl:message>
+    <wsdl:message name="cancelarAgendamentoResponse">
+        <wsdl:part name="result" element="cancelarAgendamentoOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createUsuarioRequest">
+        <wsdl:part name="toCreate" element="createUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="createUsuarioResponse">
+        <wsdl:part name="created" element="createUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkEstoqueRequest">
+        <wsdl:part name="parameters" element="createBulkEstoque"/>
+    </wsdl:message>
+    <wsdl:message name="createBulkEstoqueResponse">
+        <wsdl:part name="result" element="createBulkEstoqueOutput"/>
+    </wsdl:message>
+    <wsdl:message name="createAgendamento_DoacoesRequest">
+        <wsdl:part name="toCreate" element="createAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="createAgendamento_DoacoesResponse">
+        <wsdl:part name="created" element="createAgendamento_DoacoesOutput"/>
+    </wsdl:message>
+    <wsdl:message name="deleteAgendamento_DoacoesRequest">
+        <wsdl:part name="toDelete" element="deleteAgendamento_Doacoes"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveUsuarioRequest">
+        <wsdl:part name="toRetrieve" element="retrieveUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveUsuarioResponse">
+        <wsdl:part name="retrieved" element="retrieveUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="exportUsuarioRequest">
+        <wsdl:part name="parameters" element="exportUsuario"/>
+    </wsdl:message>
+    <wsdl:message name="exportUsuarioResponse">
+        <wsdl:part name="result" element="exportUsuarioOutput"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeHemocentroRequest">
+        <wsdl:part name="parameters" element="updateMergeHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="updateMergeHemocentroResponse">
+        <wsdl:part name="result" element="updateMergeHemocentroOutput"/>
+    </wsdl:message>
+    <wsdl:message name="listUsuario_AgendamentosRequest">
+        <wsdl:part name="pageRequest" element="listUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="listUsuario_AgendamentosResponse">
+        <wsdl:part name="pagedResults" element="listUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveUsuario_AgendamentosRequest">
+        <wsdl:part name="toRetrieve" element="retrieveUsuario_Agendamentos"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveUsuario_AgendamentosResponse">
+        <wsdl:part name="retrieved" element="retrieveUsuario_AgendamentosOutput"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveHemocentroRequest">
+        <wsdl:part name="toRetrieve" element="retrieveHemocentro"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveHemocentroResponse">
+        <wsdl:part name="retrieved" element="retrieveHemocentroOutput"/>
+    </wsdl:message>
+    
+    <wsdl:portType name="my_servicePortType">
+        <wsdl:operation name="createBulkAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createBulk' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createBulkAgendamentoRequest"/>
+            <wsdl:output message="createBulkAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="marcarNaoCompareceuPorPeriodo">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="marcarNaoCompareceuPorPeriodoRequest"/>
+            <wsdl:output message="marcarNaoCompareceuPorPeriodoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="confirmarAgendamento">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="confirmarAgendamentoRequest"/>
+            <wsdl:output message="confirmarAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'update' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateUsuario_AgendamentosRequest"/>
+            <wsdl:output message="updateUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createMerge' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeUsuarioRequest"/>
+            <wsdl:output message="createMergeUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listHemocentro">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listHemocentroRequest"/>
+            <wsdl:output message="listHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listarTiposEmFalta">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="listarTiposEmFaltaRequest"/>
+            <wsdl:output message="listarTiposEmFaltaResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="validarDoacaoPorToken">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            validacao de doacao por token 
+            </wsdl:documentation>
+            <wsdl:input message="validarDoacaoPorTokenRequest"/>
+            <wsdl:output message="validarDoacaoPorTokenResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'update' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateDoacaoRequest"/>
+            <wsdl:output message="updateDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'delete' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteUsuario_AgendamentosRequest"/>
+            <wsdl:output message="deleteUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'updateMerge' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeDoacaoRequest"/>
+            <wsdl:output message="updateMergeDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'update' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateEstoqueRequest"/>
+            <wsdl:output message="updateEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'create' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createAgendamentoRequest"/>
+            <wsdl:output message="createAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'create' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createUsuario_AgendamentosRequest"/>
+            <wsdl:output message="createUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'update' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateHemocentroRequest"/>
+            <wsdl:output message="updateHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'update' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateAgendamentoRequest"/>
+            <wsdl:output message="updateAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createMerge' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeHemocentroRequest"/>
+            <wsdl:output message="createMergeHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'delete' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteHemocentroRequest"/>
+            <wsdl:output message="deleteHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'createMerge' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeUsuario_AgendamentosRequest"/>
+            <wsdl:output message="createMergeUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listUsuario">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listUsuarioRequest"/>
+            <wsdl:output message="listUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listAgendamento">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listAgendamentoRequest"/>
+            <wsdl:output message="listAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getMetadata">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            Default 'getMetadata' query. Every service must handle this command and return metadata in the format requested. 
+            </wsdl:documentation>
+            <wsdl:input message="getMetadataRequest"/>
+            <wsdl:output message="getMetadataResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'updateMerge' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeAgendamento_DoacoesRequest"/>
+            <wsdl:output message="updateMergeAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'updateMerge' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeAgendamentoRequest"/>
+            <wsdl:output message="updateMergeAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createMerge' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeDoacaoRequest"/>
+            <wsdl:output message="createMergeDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createBulk' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createBulkUsuarioRequest"/>
+            <wsdl:output message="createBulkUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'retrieve' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveEstoqueRequest"/>
+            <wsdl:output message="retrieveEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'create' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createHemocentroRequest"/>
+            <wsdl:output message="createHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'delete' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteDoacaoRequest"/>
+            <wsdl:output message="deleteDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'retrieve' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveAgendamentoRequest"/>
+            <wsdl:output message="retrieveAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createMerge' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeEstoqueRequest"/>
+            <wsdl:output message="createMergeEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'update' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateAgendamento_DoacoesRequest"/>
+            <wsdl:output message="updateAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="importEstoque">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="importEstoqueRequest"/>
+            <wsdl:output message="importEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'delete' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteEstoqueRequest"/>
+            <wsdl:output message="deleteEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listEstoque">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listEstoqueRequest"/>
+            <wsdl:output message="listEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listarPontosMapa">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            queries de mapa e usuario 
+            </wsdl:documentation>
+            <wsdl:input message="listarPontosMapaRequest"/>
+            <wsdl:output message="listarPontosMapaResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="helloWorld">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            query de exemplo retorna uma mensagem de ola com o nome informado 
+            </wsdl:documentation>
+            <wsdl:input message="helloWorldRequest"/>
+            <wsdl:output message="helloWorldResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="buscarDashboardResumoAgendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            queries de dashboard 
+            </wsdl:documentation>
+            <wsdl:input message="buscarDashboardResumoAgendamentosRequest"/>
+            <wsdl:output message="buscarDashboardResumoAgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="buscarDashboardSerieAgendamentosPorDia">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="buscarDashboardSerieAgendamentosPorDiaRequest"/>
+            <wsdl:output message="buscarDashboardSerieAgendamentosPorDiaResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listDoacao">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listDoacaoRequest"/>
+            <wsdl:output message="listDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'createMerge' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeAgendamento_DoacoesRequest"/>
+            <wsdl:output message="createMergeAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'create' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createEstoqueRequest"/>
+            <wsdl:output message="createEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listAgendamento_DoacoesRequest"/>
+            <wsdl:output message="listAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="ajustarEstoque">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            actions de estoque 
+            </wsdl:documentation>
+            <wsdl:input message="ajustarEstoqueRequest"/>
+            <wsdl:output message="ajustarEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'update' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateUsuarioRequest"/>
+            <wsdl:output message="updateUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="exportHemocentro">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="exportHemocentroRequest"/>
+            <wsdl:output message="exportHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="odata">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="odataRequest"/>
+            <wsdl:output message="odataResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'create' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createDoacaoRequest"/>
+            <wsdl:output message="createDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listarAgendamentosPorPeriodo">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            queries de agendamento 
+            </wsdl:documentation>
+            <wsdl:input message="listarAgendamentosPorPeriodoRequest"/>
+            <wsdl:output message="listarAgendamentosPorPeriodoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'updateMerge' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeUsuario_AgendamentosRequest"/>
+            <wsdl:output message="updateMergeUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'retrieve' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveAgendamento_DoacoesRequest"/>
+            <wsdl:output message="retrieveAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="importUsuario">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="importUsuarioRequest"/>
+            <wsdl:output message="importUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="criarAgendamento">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            actions de agendamento 
+            </wsdl:documentation>
+            <wsdl:input message="criarAgendamentoRequest"/>
+            <wsdl:output message="criarAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'updateMerge' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeEstoqueRequest"/>
+            <wsdl:output message="updateMergeEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createBulk' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createBulkHemocentroRequest"/>
+            <wsdl:output message="createBulkHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'delete' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteUsuarioRequest"/>
+            <wsdl:output message="deleteUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="exportEstoque">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="exportEstoqueRequest"/>
+            <wsdl:output message="exportEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDependencies">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            Returns a list with all dependencies from this service, along with their respective versions 
+            </wsdl:documentation>
+            <wsdl:input message="getDependenciesRequest"/>
+            <wsdl:output message="getDependenciesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listarEstoquePorHemocentro">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            queries de estoque 
+            </wsdl:documentation>
+            <wsdl:input message="listarEstoquePorHemocentroRequest"/>
+            <wsdl:output message="listarEstoquePorHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'retrieve' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveDoacaoRequest"/>
+            <wsdl:output message="retrieveDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkDoacao">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createBulk' request primitive for the Doacao entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createBulkDoacaoRequest"/>
+            <wsdl:output message="createBulkDoacaoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'updateMerge' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeUsuarioRequest"/>
+            <wsdl:output message="updateMergeUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="importHemocentro">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="importHemocentroRequest"/>
+            <wsdl:output message="importHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'delete' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteAgendamentoRequest"/>
+            <wsdl:output message="deleteAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeAgendamento">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createMerge' request primitive for the Agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createMergeAgendamentoRequest"/>
+            <wsdl:output message="createMergeAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="buscarUsuarioCloud">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="buscarUsuarioCloudRequest"/>
+            <wsdl:output message="buscarUsuarioCloudResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="cancelarAgendamento">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="cancelarAgendamentoRequest"/>
+            <wsdl:output message="cancelarAgendamentoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'create' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createUsuarioRequest"/>
+            <wsdl:output message="createUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkEstoque">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'createBulk' request primitive for the Estoque entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createBulkEstoqueRequest"/>
+            <wsdl:output message="createBulkEstoqueResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'create' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="createAgendamento_DoacoesRequest"/>
+            <wsdl:output message="createAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAgendamento_Doacoes">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'delete' request primitive for the doacoes attribute of agendamento entity.\nThis primitive requires the header 'entity_parent_id' with id of parent agendamento entity. 
+            </wsdl:documentation>
+            <wsdl:input message="deleteAgendamento_DoacoesRequest"/>
+            <wsdl:output message="deleteAgendamento_DoacoesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveUsuario">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'retrieve' request primitive for the Usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveUsuarioRequest"/>
+            <wsdl:output message="retrieveUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="exportUsuario">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            </wsdl:documentation>
+            <wsdl:input message="exportUsuarioRequest"/>
+            <wsdl:output message="exportUsuarioResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'updateMerge' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="updateMergeHemocentroRequest"/>
+            <wsdl:output message="updateMergeHemocentroResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="listUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'list' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="listUsuario_AgendamentosRequest"/>
+            <wsdl:output message="listUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveUsuario_Agendamentos">
+            <wsdl:documentation>
+            WARNING: THIS OPERATION IS PRIVATE AND MAY HAVE ITS BEHAVIOR CHANGED AT ANY TIME WITHOUT NOTICE. 
+            The 'retrieve' request primitive for the agendamentos attribute of usuario entity.\nThis primitive requires the header 'entity_parent_id' with id of parent usuario entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveUsuario_AgendamentosRequest"/>
+            <wsdl:output message="retrieveUsuario_AgendamentosResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveHemocentro">
+            <wsdl:documentation>
+            THIS OPERATION IS PUBLIC. 
+            The 'retrieve' request primitive for the Hemocentro entity. 
+            </wsdl:documentation>
+            <wsdl:input message="retrieveHemocentroRequest"/>
+            <wsdl:output message="retrieveHemocentroResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="my_serviceSoapBinding" type="my_servicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="createBulkAgendamento">
+            <soap:operation soapAction="createBulkAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="marcarNaoCompareceuPorPeriodo">
+            <soap:operation soapAction="marcarNaoCompareceuPorPeriodo"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="confirmarAgendamento">
+            <soap:operation soapAction="confirmarAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsuario_Agendamentos">
+            <soap:operation soapAction="updateUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeUsuario">
+            <soap:operation soapAction="createMergeUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listHemocentro">
+            <soap:operation soapAction="listHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listarTiposEmFalta">
+            <soap:operation soapAction="listarTiposEmFalta"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="validarDoacaoPorToken">
+            <soap:operation soapAction="validarDoacaoPorToken"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateDoacao">
+            <soap:operation soapAction="updateDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUsuario_Agendamentos">
+            <soap:operation soapAction="deleteUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeDoacao">
+            <soap:operation soapAction="updateMergeDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateEstoque">
+            <soap:operation soapAction="updateEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createAgendamento">
+            <soap:operation soapAction="createAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createUsuario_Agendamentos">
+            <soap:operation soapAction="createUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateHemocentro">
+            <soap:operation soapAction="updateHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateAgendamento">
+            <soap:operation soapAction="updateAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeHemocentro">
+            <soap:operation soapAction="createMergeHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteHemocentro">
+            <soap:operation soapAction="deleteHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeUsuario_Agendamentos">
+            <soap:operation soapAction="createMergeUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listUsuario">
+            <soap:operation soapAction="listUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listAgendamento">
+            <soap:operation soapAction="listAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMetadata">
+            <soap:operation soapAction="getMetadata"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeAgendamento_Doacoes">
+            <soap:operation soapAction="updateMergeAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeAgendamento">
+            <soap:operation soapAction="updateMergeAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeDoacao">
+            <soap:operation soapAction="createMergeDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkUsuario">
+            <soap:operation soapAction="createBulkUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveEstoque">
+            <soap:operation soapAction="retrieveEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createHemocentro">
+            <soap:operation soapAction="createHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteDoacao">
+            <soap:operation soapAction="deleteDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveAgendamento">
+            <soap:operation soapAction="retrieveAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeEstoque">
+            <soap:operation soapAction="createMergeEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateAgendamento_Doacoes">
+            <soap:operation soapAction="updateAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="importEstoque">
+            <soap:operation soapAction="importEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteEstoque">
+            <soap:operation soapAction="deleteEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listEstoque">
+            <soap:operation soapAction="listEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listarPontosMapa">
+            <soap:operation soapAction="listarPontosMapa"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="helloWorld">
+            <soap:operation soapAction="helloWorld"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="buscarDashboardResumoAgendamentos">
+            <soap:operation soapAction="buscarDashboardResumoAgendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="buscarDashboardSerieAgendamentosPorDia">
+            <soap:operation soapAction="buscarDashboardSerieAgendamentosPorDia"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listDoacao">
+            <soap:operation soapAction="listDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeAgendamento_Doacoes">
+            <soap:operation soapAction="createMergeAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createEstoque">
+            <soap:operation soapAction="createEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listAgendamento_Doacoes">
+            <soap:operation soapAction="listAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ajustarEstoque">
+            <soap:operation soapAction="ajustarEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateUsuario">
+            <soap:operation soapAction="updateUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="exportHemocentro">
+            <soap:operation soapAction="exportHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="odata">
+            <soap:operation soapAction="odata"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createDoacao">
+            <soap:operation soapAction="createDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listarAgendamentosPorPeriodo">
+            <soap:operation soapAction="listarAgendamentosPorPeriodo"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeUsuario_Agendamentos">
+            <soap:operation soapAction="updateMergeUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveAgendamento_Doacoes">
+            <soap:operation soapAction="retrieveAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="importUsuario">
+            <soap:operation soapAction="importUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="criarAgendamento">
+            <soap:operation soapAction="criarAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeEstoque">
+            <soap:operation soapAction="updateMergeEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkHemocentro">
+            <soap:operation soapAction="createBulkHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUsuario">
+            <soap:operation soapAction="deleteUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="exportEstoque">
+            <soap:operation soapAction="exportEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDependencies">
+            <soap:operation soapAction="getDependencies"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listarEstoquePorHemocentro">
+            <soap:operation soapAction="listarEstoquePorHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveDoacao">
+            <soap:operation soapAction="retrieveDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkDoacao">
+            <soap:operation soapAction="createBulkDoacao"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeUsuario">
+            <soap:operation soapAction="updateMergeUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="importHemocentro">
+            <soap:operation soapAction="importHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAgendamento">
+            <soap:operation soapAction="deleteAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMergeAgendamento">
+            <soap:operation soapAction="createMergeAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="buscarUsuarioCloud">
+            <soap:operation soapAction="buscarUsuarioCloud"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="cancelarAgendamento">
+            <soap:operation soapAction="cancelarAgendamento"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createUsuario">
+            <soap:operation soapAction="createUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createBulkEstoque">
+            <soap:operation soapAction="createBulkEstoque"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createAgendamento_Doacoes">
+            <soap:operation soapAction="createAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAgendamento_Doacoes">
+            <soap:operation soapAction="deleteAgendamento_Doacoes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveUsuario">
+            <soap:operation soapAction="retrieveUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="exportUsuario">
+            <soap:operation soapAction="exportUsuario"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMergeHemocentro">
+            <soap:operation soapAction="updateMergeHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listUsuario_Agendamentos">
+            <soap:operation soapAction="listUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveUsuario_Agendamentos">
+            <soap:operation soapAction="retrieveUsuario_Agendamentos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveHemocentro">
+            <soap:operation soapAction="retrieveHemocentro"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="my_service">
+        <wsdl:documentation>
+        </wsdl:documentation>
+        <wsdl:port name="my_servicePort" binding="my_serviceSoapBinding">
+            <soap:address location="${serviceURI}"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,10 @@
+<!-- GENERATED ENTITIES: 2026-02-24 15:30:44:560 -->
+<class>br.com.senior.mydomain.myservice.UsuarioEntity</class>
+<class>br.com.senior.mydomain.myservice.Usuario_DoacoesEntity</class>
+<class>br.com.senior.mydomain.myservice.HemocentroEntity</class>
+<class>br.com.senior.mydomain.myservice.Hemocentro_AgendamentosEntity</class>
+<class>br.com.senior.mydomain.myservice.Hemocentro_DoacoesEntity</class>
+<class>br.com.senior.mydomain.myservice.Hemocentro_EstoquesEntity</class>
+<class>br.com.senior.mydomain.myservice.AgendamentoEntity</class>
+<class>br.com.senior.mydomain.myservice.DoacaoEntity</class>
+<class>br.com.senior.mydomain.myservice.EstoqueEntity</class>

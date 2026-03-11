@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260219090419__first_version.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260222190000__v2_usuario_geo_e_estoque_unique.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260222235900__usuario_geo_e_estoque_unique.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260223091543__add_unique_user.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260223092925__add_tipo_user.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/impl/src/main/resources/db/migration/my_domain/my_service/PostgreSql/V20260223111004__add_endereco.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/Oracle/VCHANGE_THIS_VERSION__Create_Entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260223101433013__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260223110741142__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260223110854594__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224135330513__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224142413300__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224143539886__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224144208816__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224144658503__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224152848785__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/V20260224153044965__my_domain_my_service_create_flat_entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/PostgreSql/VCHANGE_THIS_VERSION__Create_Entities.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hemoplus/java/server/src-gen/main/resources/entities_resources/db_sample/migration_sample/my_domain/my_service/SqlServer/VCHANGE_THIS_VERSION__Create_Entities.sql" dialect="GenericSQL" />
+  </component>
+</project>

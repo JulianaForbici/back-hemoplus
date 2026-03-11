@@ -1,0 +1,353 @@
+domain my_domain
+
+service my_service {
+  endpoints {
+    // add actions queries events and signals here
+
+    "query de exemplo retorna uma mensagem de ola com o nome informado"
+    query helloWorld {
+      in {
+        who : string
+      }
+      out {
+        helloWorldMessage : string
+      }
+    }
+
+    "actions de agendamento"
+    action criarAgendamento {
+      in {
+        usuarioId : string?
+        hemocentroId : string?
+        dataHora : dateTime?
+        observacao : string(150)?
+      }
+      out {
+        retorno : retorno
+        agendamento : agendamento?
+      }
+    }
+
+    action confirmarAgendamento {
+      in {
+        agendamentoId : string?
+      }
+      out {
+        retorno : retorno
+        agendamento : agendamento?
+      }
+    }
+
+    action cancelarAgendamento {
+      in {
+        agendamentoId : string?
+        motivo : string(150)?
+      }
+      out {
+        retorno : retorno
+        agendamento : agendamento?
+      }
+    }
+
+    action marcarNaoCompareceuPorPeriodo {
+      in {
+        agendamentoId : string
+      }
+      out {
+        retorno : retorno
+      }
+    }
+
+    "validacao de doacao por token"
+    action validarDoacaoPorToken {
+      in {
+        token : string(80)?
+        responsavelValidacao : string(55)?
+      }
+      out {
+        retorno : retorno
+        doacao : doacao?
+      }
+    }
+
+    "actions de estoque"
+    action ajustarEstoque {
+      in {
+        hemocentroId : string?
+        tipoSangue : tipoSangue?
+        fatorRh : fatorRh?
+        deltaMl : double?
+        minimoMl : double?
+      }
+      out {
+        retorno : retorno
+        estoque : estoque?
+      }
+    }
+
+    "queries de agendamento"
+    query listarAgendamentosPorPeriodo {
+      in {
+        usuarioId : string?
+        hemocentroId : string?
+        status : statusAgendamento?
+        dataInicio : dateTime?
+        dataFim : dateTime?
+      }
+      out {
+        resultado : agendamento*
+      }
+    }
+
+    "queries de mapa e usuario"
+    query listarPontosMapa {
+      in {
+        usuarioId : string?
+      }
+      out {
+        dados : dadosMapa
+      }
+    }
+
+    query buscarUsuarioCloud {
+      in {
+        usuarioCloud : string
+      }
+      out {
+        usuario : usuario?
+      }
+    }
+
+    "queries de dashboard"
+    query buscarDashboardResumoAgendamentos {
+      in {
+        dataInicio : dateTime?
+        dataFim : dateTime?
+        hemocentroId : string?
+      }
+      out {
+        retorno : retorno
+        resumo : dashboardResumoAgendamentos?
+      }
+    }
+
+    query buscarDashboardSerieAgendamentosPorDia {
+      in {
+        dataInicio : dateTime?
+        dataFim : dateTime?
+        hemocentroId : string?
+      }
+      out {
+        retorno : retorno
+        itens : dashboardSerieDia*
+      }
+    }
+
+    "queries de estoque"
+    query listarEstoquePorHemocentro {
+      in {
+        hemocentroId : string?
+      }
+      out {
+        resultado : estoque*
+      }
+    }
+
+    query listarTiposEmFalta {
+      in {
+        hemocentroId : string?
+      }
+      out {
+        resultado : estoque*
+      }
+    }
+
+    "events de dominio"
+    event doacaoConfirmada {
+      payload {
+        doacaoId : string
+        usuarioId : string
+        hemocentroId : string
+        agendamentoId : string
+        dataHoraConfirmacao : dateTime
+      }
+    }
+
+    event agendamentoCriado {
+      payload {
+        agendamentoId : string
+        usuarioId : string
+        hemocentroId : string
+        dataHora : dateTime
+        status : statusAgendamento
+      }
+    }
+
+    event agendamentoCancelado {
+      payload {
+        agendamentoId : string
+        usuarioId : string
+        hemocentroId : string
+        dataHora : dateTime
+        motivo : string(150)?
+      }
+    }
+  }
+
+  types {
+    // define records and enumerations here
+
+    "enumeracoes de dominio"
+    enumeration fatorRh {
+      NEGATIVO
+      POSITIVO
+    }
+
+    enumeration tipoSangue {
+      A
+      B
+      AB
+      O
+    }
+
+    enumeration tipoUsuario {
+      DOADOR
+      ADMIN
+    }
+
+    enumeration statusAgendamento {
+      PENDENTE
+      CONFIRMADO
+      CANCELADO
+      COMPARECEU
+      NAO_COMPARECEU
+    }
+
+    "records de apoio"
+    record retorno {
+      mensagem : string
+      codigo : string?
+      contemErro : boolean? default : false
+    }
+
+    record pontoMapa {
+      id : string
+      tipo : string
+      nome : string?
+      latitude : double
+      longitude : double
+    }
+
+    record dadosMapa {
+      usuario : pontoMapa?
+      hemocentros : pontoMapa*
+    }
+
+    record dashboardResumoAgendamentos {
+      total : integer
+      pendentes : integer
+      confirmados : integer
+      cancelados : integer
+      compareceu : integer
+      naoCompareceu : integer
+      taxaComparecimento : double
+    }
+
+    record dashboardSerieDia {
+      dia : date
+      total : integer
+      confirmados : integer
+      cancelados : integer
+      compareceu : integer
+      naoCompareceu : integer
+    }
+  }
+
+  entities {
+    // define any entities here
+
+    "entidades principais"
+    entity usuario {
+      id : uuid?
+      nomeCompleto : string(80)
+      email : string(120)
+      telefone : string(20)
+      cpf : string(11)
+      dataNascimento : date?
+      ativo : boolean? default : true
+      dataCadastro : dateTime?
+      agendamentos : agendamento?*
+      doacoes : doacao?*
+      tipoSangue : tipoSangue
+      fatorRh : fatorRh
+      latitude : double?
+      longitude : double?
+      usuarioCloud : string(120)
+      tipoUsuario : tipoUsuario
+      cep : string(9)?
+      rua : string(80)?
+      numero : string(10)?
+      complemento : string(60)?
+      bairro : string(40)?
+      cidade : string(40)?
+      uf : string(2)?
+    }
+
+    entity hemocentro {
+      id : uuid?
+      nome : string(60)
+      rua : string(60)
+      numero : string(10)?
+      bairro : string(40)?
+      cidade : string(40)
+      uf : string(2)
+      cep : string(9)?
+      latitude : double?
+      longitude : double?
+      telefone : string(20)?
+      ativo : boolean? default : true
+      agendamentos : agendamento?*
+      doacoes : doacao?*
+      estoques : estoque?*
+    }
+
+    "agendamento e status da doacao"
+    entity agendamento {
+      id : uuid?
+      dataHora : dateTime
+      status : statusAgendamento
+      observacao : string(150)?
+      motivoStatus : string(150)?
+      dataCriacao : dateTime?
+      dataAtualizacao : dateTime?
+      token : string(80)?
+      tokenExpiraEm : dateTime?
+      tokenUsadoEm : dateTime?
+      usuario : usuario?
+      hemocentro : hemocentro?
+      doacoes : doacao?*
+    }
+
+    entity doacao {
+      id : uuid?
+      dataHoraConfirmacao : dateTime
+      responsavelValidacao : string(55)?
+      usuario : usuario?
+      hemocentro : hemocentro?
+      agendamento : agendamento?
+      tipoSangue : tipoSangue
+      fatorRh : fatorRh
+    }
+
+    "controle de estoque por hemocentro"
+    entity estoque {
+      id : uuid?
+      tipoSangue : tipoSangue
+      fatorRh : fatorRh
+      quantidadeMl : integer minValue : 0
+      minimoMl : integer minValue : 0
+      dataAtualizacao : dateTime
+      hemocentro : hemocentro?
+    }
+  }
+}

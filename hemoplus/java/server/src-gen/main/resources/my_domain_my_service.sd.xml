@@ -1,0 +1,914 @@
+<service appName="hello-world" domain="my_domain" name="my_service" version="${version}">
+    <commands>
+        <query name="helloWorld" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="who" type="string" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="helloWorldMessage" type="string" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <action name="criarAgendamento" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="usuarioId" type="string" optional="true" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+                <slot name="dataHora" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="observacao" type="string" optional="true" multivalued="false" maxLength="150"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="agendamento" type="agendamento" optional="true" multivalued="false"/>
+            </output>
+        </action>
+        <action name="confirmarAgendamento" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="agendamentoId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="agendamento" type="agendamento" optional="true" multivalued="false"/>
+            </output>
+        </action>
+        <action name="cancelarAgendamento" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="agendamentoId" type="string" optional="true" multivalued="false"/>
+                <slot name="motivo" type="string" optional="true" multivalued="false" maxLength="150"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="agendamento" type="agendamento" optional="true" multivalued="false"/>
+            </output>
+        </action>
+        <action name="marcarNaoCompareceuPorPeriodo" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="agendamentoId" type="string" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+            </output>
+        </action>
+        <action name="validarDoacaoPorToken" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="token" type="string" optional="true" multivalued="false" maxLength="80"/>
+                <slot name="responsavelValidacao" type="string" optional="true" multivalued="false" maxLength="55"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="doacao" type="doacao" optional="true" multivalued="false"/>
+            </output>
+        </action>
+        <action name="ajustarEstoque" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+                <slot name="tipoSangue" type="tipoSangue" optional="true" multivalued="false"/>
+                <slot name="fatorRh" type="fatorRh" optional="true" multivalued="false"/>
+                <slot name="deltaMl" type="double" optional="true" multivalued="false"/>
+                <slot name="minimoMl" type="double" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="estoque" type="estoque" optional="true" multivalued="false"/>
+            </output>
+        </action>
+        <query name="listarAgendamentosPorPeriodo" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="usuarioId" type="string" optional="true" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+                <slot name="status" type="statusAgendamento" optional="true" multivalued="false"/>
+                <slot name="dataInicio" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="dataFim" type="dateTime" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="resultado" type="agendamento" optional="false" multivalued="true"/>
+            </output>
+        </query>
+        <query name="listarPontosMapa" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="usuarioId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="dados" type="dadosMapa" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <query name="buscarUsuarioCloud" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="usuarioCloud" type="string" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="usuario" type="usuario" optional="true" multivalued="false"/>
+            </output>
+        </query>
+        <query name="buscarDashboardResumoAgendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="dataInicio" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="dataFim" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="resumo" type="dashboardResumoAgendamentos" optional="true" multivalued="false"/>
+            </output>
+        </query>
+        <query name="buscarDashboardSerieAgendamentosPorDia" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="dataInicio" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="dataFim" type="dateTime" optional="true" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="retorno" type="retorno" optional="false" multivalued="false"/>
+                <slot name="itens" type="dashboardSerieDia" optional="false" multivalued="true"/>
+            </output>
+        </query>
+        <query name="listarEstoquePorHemocentro" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="resultado" type="estoque" optional="false" multivalued="true"/>
+            </output>
+        </query>
+        <query name="listarTiposEmFalta" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="hemocentroId" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="resultado" type="estoque" optional="false" multivalued="true"/>
+            </output>
+        </query>
+        <query name="getMetadata" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="metadataFormat" type="string" optional="true" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="metadata" type="string" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <action name="odata" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+        </action>
+        <action name="importUsuario" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="importConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="importJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </action>
+        <query name="exportUsuario" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="exportConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="exportJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <action name="importHemocentro" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="importConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="importJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </action>
+        <query name="exportHemocentro" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="exportConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="exportJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <action name="importEstoque" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="importConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="importJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </action>
+        <query name="exportEstoque" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="config" type="exportConfig" optional="false" multivalued="false"/>
+            </input>
+            <output>
+                <slot name="exportJobId" type="string" optional="false" multivalued="false"/>
+            </output>
+        </query>
+        <query name="getDependencies" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <output>
+                <slot name="dependencies" type="dependency" optional="false" multivalued="true"/>
+            </output>
+        </query>
+        <create name="createUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="usuario"/>
+            <output type="usuario"/>
+        </create>
+        <createBulk name="createBulkUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="entities" type="usuario" optional="false" multivalued="true"/>
+            </input>
+            <output>
+            </output>
+        </createBulk>
+        <createMerge name="createMergeUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="usuario"/>
+            <output type="usuario"/>
+        </createMerge>
+        <retrieve name="retrieveUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+            <output type="usuario"/>
+        </retrieve>
+        <list name="listUsuario" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="usuario" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <update name="updateUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="usuario"/>
+            <output type="usuario"/>
+        </update>
+        <updateMerge name="updateMergeUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="usuario"/>
+            <output type="usuario"/>
+        </updateMerge>
+        <delete name="deleteUsuario" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+        </delete>
+        <create name="createUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </create>
+        <createMerge name="createMergeUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </createMerge>
+        <update name="updateUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </update>
+        <updateMerge name="updateMergeUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </updateMerge>
+        <retrieve name="retrieveUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="string" format="uuid"/>
+            <output type="agendamento"/>
+        </retrieve>
+        <delete name="deleteUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="string" format="uuid"/>
+        </delete>
+        <list name="listUsuario_Agendamentos" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="agendamento" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <create name="createHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="hemocentro"/>
+            <output type="hemocentro"/>
+        </create>
+        <createBulk name="createBulkHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="entities" type="hemocentro" optional="false" multivalued="true"/>
+            </input>
+            <output>
+            </output>
+        </createBulk>
+        <createMerge name="createMergeHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="hemocentro"/>
+            <output type="hemocentro"/>
+        </createMerge>
+        <retrieve name="retrieveHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+            <output type="hemocentro"/>
+        </retrieve>
+        <list name="listHemocentro" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="hemocentro" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <update name="updateHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="hemocentro"/>
+            <output type="hemocentro"/>
+        </update>
+        <updateMerge name="updateMergeHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="hemocentro"/>
+            <output type="hemocentro"/>
+        </updateMerge>
+        <delete name="deleteHemocentro" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+        </delete>
+        <create name="createAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </create>
+        <createBulk name="createBulkAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="entities" type="agendamento" optional="false" multivalued="true"/>
+            </input>
+            <output>
+            </output>
+        </createBulk>
+        <createMerge name="createMergeAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </createMerge>
+        <retrieve name="retrieveAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+            <output type="agendamento"/>
+        </retrieve>
+        <list name="listAgendamento" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="agendamento" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <update name="updateAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </update>
+        <updateMerge name="updateMergeAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="agendamento"/>
+            <output type="agendamento"/>
+        </updateMerge>
+        <delete name="deleteAgendamento" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+        </delete>
+        <create name="createAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </create>
+        <createMerge name="createMergeAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </createMerge>
+        <update name="updateAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </update>
+        <updateMerge name="updateMergeAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </updateMerge>
+        <retrieve name="retrieveAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="string" format="uuid"/>
+            <output type="doacao"/>
+        </retrieve>
+        <delete name="deleteAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input type="string" format="uuid"/>
+        </delete>
+        <list name="listAgendamento_Doacoes" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="doacao" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <create name="createDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </create>
+        <createBulk name="createBulkDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="entities" type="doacao" optional="false" multivalued="true"/>
+            </input>
+            <output>
+            </output>
+        </createBulk>
+        <createMerge name="createMergeDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </createMerge>
+        <retrieve name="retrieveDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+            <output type="doacao"/>
+        </retrieve>
+        <list name="listDoacao" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="doacao" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <update name="updateDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </update>
+        <updateMerge name="updateMergeDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="doacao"/>
+            <output type="doacao"/>
+        </updateMerge>
+        <delete name="deleteDoacao" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+        </delete>
+        <create name="createEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="estoque"/>
+            <output type="estoque"/>
+        </create>
+        <createBulk name="createBulkEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="entities" type="estoque" optional="false" multivalued="true"/>
+            </input>
+            <output>
+            </output>
+        </createBulk>
+        <createMerge name="createMergeEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="estoque"/>
+            <output type="estoque"/>
+        </createMerge>
+        <retrieve name="retrieveEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+            <output type="estoque"/>
+        </retrieve>
+        <list name="listEstoque" idempotent="false" extensionPoint="false" visibility="PRIVATE">
+            <input>
+                <slot name="offset" type="integer" optional="false" multivalued="false"/>
+                <slot name="size" type="integer" optional="false" multivalued="false"/>
+                <slot name="orderBy" type="string" optional="false" multivalued="false"/>
+                <slot name="filter" type="string" optional="false" multivalued="false"/>
+                <slot name="displayFields" type="string" optional="false" multivalued="true"/>
+            </input>
+            <output>
+                <slot name="contents" type="estoque" optional="false" multivalued="true"/>
+            </output>
+        </list>
+        <update name="updateEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="estoque"/>
+            <output type="estoque"/>
+        </update>
+        <updateMerge name="updateMergeEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input type="estoque"/>
+            <output type="estoque"/>
+        </updateMerge>
+        <delete name="deleteEstoque" idempotent="false" extensionPoint="false" visibility="PUBLIC">
+            <input>
+                <slot name="id" type="string" format="uuid" optional="false" multivalued="false"/>
+            </input>
+        </delete>
+    </commands>
+    <signals>
+    </signals>
+    <events>
+        <event name="doacaoConfirmada" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="doacaoId" type="string" optional="false" multivalued="false"/>
+                <slot name="usuarioId" type="string" optional="false" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="false" multivalued="false"/>
+                <slot name="agendamentoId" type="string" optional="false" multivalued="false"/>
+                <slot name="dataHoraConfirmacao" type="dateTime" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="agendamentoCriado" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="agendamentoId" type="string" optional="false" multivalued="false"/>
+                <slot name="usuarioId" type="string" optional="false" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="false" multivalued="false"/>
+                <slot name="dataHora" type="dateTime" optional="false" multivalued="false"/>
+                <slot name="status" type="statusAgendamento" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="agendamentoCancelado" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="agendamentoId" type="string" optional="false" multivalued="false"/>
+                <slot name="usuarioId" type="string" optional="false" multivalued="false"/>
+                <slot name="hemocentroId" type="string" optional="false" multivalued="false"/>
+                <slot name="dataHora" type="dateTime" optional="false" multivalued="false"/>
+                <slot name="motivo" type="string" optional="true" multivalued="false" maxLength="150"/>
+            </payload>
+        </event>
+        <event name="serviceStarted" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="domain" type="string" optional="false" multivalued="false"/>
+                <slot name="service" type="string" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="notifyUserEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload type="notifyUserEventPayload"/>
+        </event>
+        <event name="importUsuarioEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="importEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="exportUsuarioEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="exportEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="importHemocentroEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="importEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="exportHemocentroEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="exportEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="importAgendamentoEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="importEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="exportAgendamentoEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="exportEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="importDoacaoEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="importEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="exportDoacaoEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="exportEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="importEstoqueEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="importEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+        <event name="exportEstoqueEvent" extensionPoint="false" visibility="PRIVATE">
+            <payload>
+                <slot name="eventpl" type="exportEventStatus" optional="false" multivalued="false"/>
+            </payload>
+        </event>
+    </events>
+    <records>
+        <record name="retorno">
+            <slot name="mensagem" type="string" optional="false" multivalued="false"/>
+            <slot name="codigo" type="string" optional="true" multivalued="false"/>
+            <slot name="contemErro" type="boolean" optional="true" multivalued="false"/>
+        </record>
+        <record name="pontoMapa">
+            <slot name="id" type="string" optional="false" multivalued="false"/>
+            <slot name="tipo" type="string" optional="false" multivalued="false"/>
+            <slot name="nome" type="string" optional="true" multivalued="false"/>
+            <slot name="latitude" type="double" optional="false" multivalued="false"/>
+            <slot name="longitude" type="double" optional="false" multivalued="false"/>
+        </record>
+        <record name="dadosMapa">
+            <slot name="usuario" type="pontoMapa" optional="true" multivalued="false"/>
+            <slot name="hemocentros" type="pontoMapa" optional="false" multivalued="true"/>
+        </record>
+        <record name="dashboardResumoAgendamentos">
+            <slot name="total" type="integer" optional="false" multivalued="false"/>
+            <slot name="pendentes" type="integer" optional="false" multivalued="false"/>
+            <slot name="confirmados" type="integer" optional="false" multivalued="false"/>
+            <slot name="cancelados" type="integer" optional="false" multivalued="false"/>
+            <slot name="compareceu" type="integer" optional="false" multivalued="false"/>
+            <slot name="naoCompareceu" type="integer" optional="false" multivalued="false"/>
+            <slot name="taxaComparecimento" type="double" optional="false" multivalued="false"/>
+        </record>
+        <record name="dashboardSerieDia">
+            <slot name="dia" type="date" optional="false" multivalued="false"/>
+            <slot name="total" type="integer" optional="false" multivalued="false"/>
+            <slot name="confirmados" type="integer" optional="false" multivalued="false"/>
+            <slot name="cancelados" type="integer" optional="false" multivalued="false"/>
+            <slot name="compareceu" type="integer" optional="false" multivalued="false"/>
+            <slot name="naoCompareceu" type="integer" optional="false" multivalued="false"/>
+        </record>
+        <record name="usuario">
+            <slot name="id" type="string" format="uuid" optional="true" multivalued="false"/>
+            <slot name="nomeCompleto" type="string" optional="false" multivalued="false" maxLength="80"/>
+            <slot name="email" type="string" optional="false" multivalued="false" maxLength="120"/>
+            <slot name="telefone" type="string" optional="false" multivalued="false" maxLength="20"/>
+            <slot name="cpf" type="string" optional="false" multivalued="false" maxLength="11"/>
+            <slot name="dataNascimento" type="date" optional="true" multivalued="false"/>
+            <slot name="ativo" type="boolean" optional="true" multivalued="false"/>
+            <slot name="dataCadastro" type="dateTime" optional="true" multivalued="false"/>
+            <slot name="agendamentos" type="agendamento" optional="true" multivalued="true"/>
+            <slot name="doacoes" type="doacao" optional="true" multivalued="true"/>
+            <slot name="tipoSangue" type="tipoSangue" optional="false" multivalued="false"/>
+            <slot name="fatorRh" type="fatorRh" optional="false" multivalued="false"/>
+            <slot name="latitude" type="double" optional="true" multivalued="false"/>
+            <slot name="longitude" type="double" optional="true" multivalued="false"/>
+            <slot name="usuarioCloud" type="string" optional="false" multivalued="false" maxLength="120"/>
+            <slot name="tipoUsuario" type="tipoUsuario" optional="false" multivalued="false"/>
+            <slot name="cep" type="string" optional="true" multivalued="false" maxLength="9"/>
+            <slot name="rua" type="string" optional="true" multivalued="false" maxLength="80"/>
+            <slot name="numero" type="string" optional="true" multivalued="false" maxLength="10"/>
+            <slot name="complemento" type="string" optional="true" multivalued="false" maxLength="60"/>
+            <slot name="bairro" type="string" optional="true" multivalued="false" maxLength="40"/>
+            <slot name="cidade" type="string" optional="true" multivalued="false" maxLength="40"/>
+            <slot name="uf" type="string" optional="true" multivalued="false" maxLength="2"/>
+        </record>
+        <record name="hemocentro">
+            <slot name="id" type="string" format="uuid" optional="true" multivalued="false"/>
+            <slot name="nome" type="string" optional="false" multivalued="false" maxLength="60"/>
+            <slot name="rua" type="string" optional="false" multivalued="false" maxLength="60"/>
+            <slot name="numero" type="string" optional="true" multivalued="false" maxLength="10"/>
+            <slot name="bairro" type="string" optional="true" multivalued="false" maxLength="40"/>
+            <slot name="cidade" type="string" optional="false" multivalued="false" maxLength="40"/>
+            <slot name="uf" type="string" optional="false" multivalued="false" maxLength="2"/>
+            <slot name="cep" type="string" optional="true" multivalued="false" maxLength="9"/>
+            <slot name="latitude" type="double" optional="true" multivalued="false"/>
+            <slot name="longitude" type="double" optional="true" multivalued="false"/>
+            <slot name="telefone" type="string" optional="true" multivalued="false" maxLength="20"/>
+            <slot name="ativo" type="boolean" optional="true" multivalued="false"/>
+            <slot name="agendamentos" type="agendamento" optional="true" multivalued="true"/>
+            <slot name="doacoes" type="doacao" optional="true" multivalued="true"/>
+            <slot name="estoques" type="estoque" optional="true" multivalued="true"/>
+        </record>
+        <record name="agendamento">
+            <slot name="id" type="string" format="uuid" optional="true" multivalued="false"/>
+            <slot name="dataHora" type="dateTime" optional="false" multivalued="false"/>
+            <slot name="status" type="statusAgendamento" optional="false" multivalued="false"/>
+            <slot name="observacao" type="string" optional="true" multivalued="false" maxLength="150"/>
+            <slot name="motivoStatus" type="string" optional="true" multivalued="false" maxLength="150"/>
+            <slot name="dataCriacao" type="dateTime" optional="true" multivalued="false"/>
+            <slot name="dataAtualizacao" type="dateTime" optional="true" multivalued="false"/>
+            <slot name="token" type="string" optional="true" multivalued="false" maxLength="80"/>
+            <slot name="tokenExpiraEm" type="dateTime" optional="true" multivalued="false"/>
+            <slot name="tokenUsadoEm" type="dateTime" optional="true" multivalued="false"/>
+            <slot name="usuario" type="usuario" optional="true" multivalued="false"/>
+            <slot name="hemocentro" type="hemocentro" optional="true" multivalued="false"/>
+            <slot name="doacoes" type="doacao" optional="true" multivalued="true"/>
+        </record>
+        <record name="doacao">
+            <slot name="id" type="string" format="uuid" optional="true" multivalued="false"/>
+            <slot name="dataHoraConfirmacao" type="dateTime" optional="false" multivalued="false"/>
+            <slot name="responsavelValidacao" type="string" optional="true" multivalued="false" maxLength="55"/>
+            <slot name="usuario" type="usuario" optional="true" multivalued="false"/>
+            <slot name="hemocentro" type="hemocentro" optional="true" multivalued="false"/>
+            <slot name="agendamento" type="agendamento" optional="true" multivalued="false"/>
+            <slot name="tipoSangue" type="tipoSangue" optional="false" multivalued="false"/>
+            <slot name="fatorRh" type="fatorRh" optional="false" multivalued="false"/>
+        </record>
+        <record name="estoque">
+            <slot name="id" type="string" format="uuid" optional="true" multivalued="false"/>
+            <slot name="tipoSangue" type="tipoSangue" optional="false" multivalued="false"/>
+            <slot name="fatorRh" type="fatorRh" optional="false" multivalued="false"/>
+            <slot name="quantidadeMl" type="integer" optional="false" multivalued="false" minValue="0"/>
+            <slot name="minimoMl" type="integer" optional="false" multivalued="false" minValue="0"/>
+            <slot name="dataAtualizacao" type="dateTime" optional="false" multivalued="false"/>
+            <slot name="hemocentro" type="hemocentro" optional="true" multivalued="false"/>
+        </record>
+        <record name="notifyUserEventPayload">
+            <slot name="notificationClass" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationOrigin" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationKind" type="userNotificationKind" optional="false" multivalued="false"/>
+            <slot name="notificationPriority" type="userNotificationPriority" optional="false" multivalued="false"/>
+            <slot name="notificationSubject" type="string" optional="false" multivalued="false"/>
+            <slot name="notificationContent" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceDomain" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceService" type="string" optional="false" multivalued="false"/>
+            <slot name="destinationUser" type="string" optional="false" multivalued="false"/>
+            <slot name="link" type="string" optional="true" multivalued="false"/>
+        </record>
+        <record name="emailNotifyUserEventPayload">
+            <slot name="notificationClass" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationOrigin" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationKind" type="userNotificationKind" optional="false" multivalued="false"/>
+            <slot name="notificationPriority" type="userNotificationPriority" optional="false" multivalued="false"/>
+            <slot name="notificationSubject" type="string" optional="false" multivalued="false"/>
+            <slot name="notificationContent" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceDomain" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceService" type="string" optional="false" multivalued="false"/>
+            <slot name="destinationUser" type="string" optional="false" multivalued="false"/>
+            <slot name="link" type="string" optional="true" multivalued="false"/>
+            <slot name="from" type="string" optional="false" multivalued="false"/>
+            <slot name="sendTo" type="string" optional="true" multivalued="true"/>
+            <slot name="format" type="eventEmailFormat" optional="true" multivalued="false"/>
+        </record>
+        <record name="pushNotifyUserEventPayload">
+            <slot name="notificationClass" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationOrigin" type="string" optional="true" multivalued="false"/>
+            <slot name="notificationKind" type="userNotificationKind" optional="false" multivalued="false"/>
+            <slot name="notificationPriority" type="userNotificationPriority" optional="false" multivalued="false"/>
+            <slot name="notificationSubject" type="string" optional="false" multivalued="false"/>
+            <slot name="notificationContent" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceDomain" type="string" optional="false" multivalued="false"/>
+            <slot name="sourceService" type="string" optional="false" multivalued="false"/>
+            <slot name="destinationUser" type="string" optional="false" multivalued="false"/>
+            <slot name="link" type="string" optional="true" multivalued="false"/>
+            <slot name="applicationId" type="string" optional="false" multivalued="false"/>
+        </record>
+        <record name="blobReference">
+            <slot name="domainName" type="string" optional="true" multivalued="false"/>
+            <slot name="serviceName" type="string" optional="true" multivalued="false"/>
+            <slot name="targetObjectId" type="string" optional="false" multivalued="false"/>
+            <slot name="targetCopyId" type="string" optional="true" multivalued="false"/>
+        </record>
+        <record name="basicErrorPayload">
+            <slot name="message" type="string" optional="true" multivalued="false"/>
+            <slot name="errorCode" type="string" optional="true" multivalued="false"/>
+        </record>
+        <record name="importError">
+            <slot name="errorType" type="errorType" optional="false" multivalued="false"/>
+            <slot name="lineNumber" type="integer" optional="false" multivalued="false"/>
+            <slot name="bean" type="string" optional="false" multivalued="false"/>
+            <slot name="message" type="string" optional="false" multivalued="false"/>
+            <slot name="exceptionClass" type="string" optional="false" multivalued="false"/>
+        </record>
+        <record name="fielddto">
+            <slot name="id" type="integer" optional="false" multivalued="false"/>
+            <slot name="name" type="string" optional="false" multivalued="false"/>
+            <slot name="fieldType" type="fieldType" optional="false" multivalued="false"/>
+            <slot name="start" type="integer" optional="true" multivalued="false"/>
+            <slot name="size" type="integer" optional="true" multivalued="false"/>
+            <slot name="maskPattern" type="string" optional="true" multivalued="false"/>
+        </record>
+        <record name="hookdto">
+            <slot name="hookFunction" type="hookFunction" optional="false" multivalued="false"/>
+            <slot name="script" type="string" optional="false" multivalued="false"/>
+        </record>
+        <record name="layoutdto">
+            <slot name="id" type="integer" optional="false" multivalued="false"/>
+            <slot name="description" type="string" optional="false" multivalued="false"/>
+            <slot name="fileFormat" type="fileFormat" optional="false" multivalued="false"/>
+            <slot name="errorStrategy" type="errorStrategy" optional="false" multivalued="false"/>
+            <slot name="delimiter" type="string" optional="true" multivalued="false"/>
+            <slot name="skipLines" type="integer" optional="false" multivalued="false"/>
+            <slot name="fields" type="fielddto" optional="false" multivalued="true"/>
+            <slot name="hooks" type="hookdto" optional="true" multivalued="true"/>
+        </record>
+        <record name="importReport">
+            <slot name="id" type="string" optional="false" multivalued="false"/>
+            <slot name="startTime" type="dateTime" optional="false" multivalued="false"/>
+            <slot name="endTime" type="dateTime" optional="false" multivalued="false"/>
+            <slot name="uri" type="string" optional="false" multivalued="false"/>
+            <slot name="beanClass" type="string" optional="false" multivalued="false"/>
+            <slot name="serviceClass" type="string" optional="false" multivalued="false"/>
+            <slot name="layout" type="layoutdto" optional="false" multivalued="false"/>
+            <slot name="sucessCount" type="integer" optional="false" multivalued="false"/>
+            <slot name="errorsCount" type="integer" optional="false" multivalued="false"/>
+            <slot name="filteredCount" type="integer" optional="false" multivalued="false"/>
+            <slot name="skippedCount" type="integer" optional="false" multivalued="false"/>
+            <slot name="importErrors" type="importError" optional="true" multivalued="true"/>
+        </record>
+        <record name="exportEventStatus">
+            <slot name="importerId" type="string" optional="false" multivalued="false"/>
+            <slot name="eventType" type="eventType" optional="false" multivalued="false"/>
+            <slot name="recordCount" type="integer" optional="false" multivalued="false"/>
+        </record>
+        <record name="importEventStatus">
+            <slot name="importerId" type="string" optional="false" multivalued="false"/>
+            <slot name="eventType" type="eventType" optional="false" multivalued="false"/>
+            <slot name="status" type="status" optional="false" multivalued="false"/>
+            <slot name="errorMessage" type="string" optional="true" multivalued="false"/>
+            <slot name="recordCount" type="integer" optional="false" multivalued="false"/>
+            <slot name="importReport" type="importReport" optional="true" multivalued="false"/>
+        </record>
+        <record name="exportConfig">
+            <slot name="uri" type="string" optional="false" multivalued="false"/>
+            <slot name="layout" type="layoutdto" optional="false" multivalued="false"/>
+            <slot name="async" type="boolean" optional="false" multivalued="false"/>
+            <slot name="errorStrategy" type="string" optional="false" multivalued="false"/>
+        </record>
+        <record name="importConfig">
+            <slot name="uri" type="string" optional="false" multivalued="false"/>
+            <slot name="layout" type="layoutdto" optional="false" multivalued="false"/>
+            <slot name="async" type="boolean" optional="false" multivalued="false"/>
+            <slot name="batchSize" type="integer" optional="false" multivalued="false"/>
+            <slot name="errorStrategy" type="errorStrategy" optional="false" multivalued="false"/>
+        </record>
+        <record name="dependency">
+            <slot name="domain" type="string" optional="false" multivalued="false"/>
+            <slot name="service" type="string" optional="false" multivalued="false"/>
+            <slot name="version" type="string" optional="false" multivalued="false"/>
+        </record>
+    </records>
+    <enumerations>
+        <enumeration name="fatorRh">
+            <value name="NEGATIVO"/>
+            <value name="POSITIVO"/>
+        </enumeration>
+        <enumeration name="tipoSangue">
+            <value name="A"/>
+            <value name="B"/>
+            <value name="AB"/>
+            <value name="O"/>
+        </enumeration>
+        <enumeration name="tipoUsuario">
+            <value name="DOADOR"/>
+            <value name="ADMIN"/>
+        </enumeration>
+        <enumeration name="statusAgendamento">
+            <value name="PENDENTE"/>
+            <value name="CONFIRMADO"/>
+            <value name="CANCELADO"/>
+            <value name="COMPARECEU"/>
+            <value name="NAO_COMPARECEU"/>
+        </enumeration>
+        <enumeration name="userNotificationKind">
+            <value name="Operational"/>
+            <value name="Management"/>
+            <value name="News"/>
+        </enumeration>
+        <enumeration name="userNotificationPriority">
+            <value name="Error"/>
+            <value name="Alert"/>
+            <value name="None"/>
+        </enumeration>
+        <enumeration name="eventEmailFormat">
+            <value name="HTML"/>
+            <value name="PLAIN_TEXT"/>
+        </enumeration>
+        <enumeration name="fieldType">
+            <value name="BINARY"/>
+            <value name="BOOLEAN"/>
+            <value name="DATE"/>
+            <value name="DATETIME"/>
+            <value name="LOCALDATETIME"/>
+            <value name="DOUBLE"/>
+            <value name="ENUM"/>
+            <value name="INTEGER"/>
+            <value name="MONEY"/>
+            <value name="STRING"/>
+            <value name="TIME"/>
+        </enumeration>
+        <enumeration name="fileFormat">
+            <value name="CSV"/>
+            <value name="FLAT"/>
+            <value name="JSON"/>
+            <value name="XML"/>
+        </enumeration>
+        <enumeration name="hookFunction">
+            <value name="BEFORE_PARSE"/>
+            <value name="BEFORE_CONVERSION"/>
+            <value name="ON_ERROR"/>
+            <value name="VALIDATE"/>
+        </enumeration>
+        <enumeration name="eventType">
+            <value name="CHUNK"/>
+            <value name="DOWNLOAD"/>
+            <value name="ERROR"/>
+            <value name="FINISH"/>
+            <value name="START"/>
+        </enumeration>
+        <enumeration name="errorStrategy">
+            <value name="CALL_SCRIPT"/>
+            <value name="IGNORE"/>
+            <value name="STOP"/>
+        </enumeration>
+        <enumeration name="status">
+            <value name="DONE"/>
+            <value name="DONE_WITH_ERRORS"/>
+            <value name="DOWNLOADING"/>
+            <value name="ERROR"/>
+            <value name="NOT_STARTED"/>
+            <value name="RUNNING"/>
+        </enumeration>
+        <enumeration name="errorType">
+            <value name="CONVERT_ERROR"/>
+            <value name="SERVICE_ERROR"/>
+        </enumeration>
+    </enumerations>
+</service>

@@ -1,0 +1,1 @@
+alter table usuario add column tipo_usuario VARCHAR(255);

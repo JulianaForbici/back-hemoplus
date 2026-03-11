@@ -1,0 +1,83 @@
+domain my_domain
+
+entities {
+  generateExtraResources: true
+  securityType: secure
+  enumType: string
+}
+
+service my_service {
+  entities {
+
+    entity usuario {
+      generateCustomValidator : true
+      relationships {
+        OneToMany(agendamentos) {
+          type: composition
+          opposite: usuario
+        }
+        OneToMany(doacoes) {
+          type: aggregation
+          opposite: usuario
+        }
+      }
+    }
+
+    entity hemocentro {
+      generateCustomValidator : true
+      relationships {
+        OneToMany(agendamentos) {
+          type: aggregation
+          opposite: hemocentro
+        }
+        OneToMany(doacoes) {
+          type: aggregation
+          opposite: hemocentro
+        }
+        OneToMany(estoques) {
+          type: aggregation
+          opposite: hemocentro
+        }
+      }
+    }
+
+    entity agendamento {
+      generateCustomValidator : true
+      relationships {
+        ManyToOne(usuario) {
+          type: aggregation
+        }
+        ManyToOne(hemocentro) {
+          type: aggregation
+        }
+        OneToMany(doacoes) {
+          type: composition
+          opposite: agendamento
+        }
+      }
+    }
+
+    entity doacao {
+      relationships {
+        ManyToOne(usuario) {
+          type: aggregation
+        }
+        ManyToOne(hemocentro) {
+          type: aggregation
+        }
+        ManyToOne(agendamento) {
+          type: aggregation
+        }
+      }
+    }
+
+    entity estoque {
+      generateCustomValidator : true
+      relationships {
+        ManyToOne(hemocentro) {
+          type: aggregation
+        }
+      }
+    }
+  }
+}

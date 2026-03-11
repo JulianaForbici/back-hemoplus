@@ -1,0 +1,2862 @@
+{
+	"version": "0.0.1",
+	"edlVersion": "31.1.1",
+	"app": "hello-world",
+	"domain": "my_domain",
+	"service": "my_service",
+	"enumType": "string",
+	"enumerations": {
+		"fatorRh": {
+			"name": "fatorRh",
+			"values": [
+				"NEGATIVO",
+				"POSITIVO"
+			]
+		}
+		,"statusAgendamento": {
+			"name": "statusAgendamento",
+			"values": [
+				"PENDENTE",
+				"CONFIRMADO",
+				"CANCELADO",
+				"COMPARECEU",
+				"NAO_COMPARECEU"
+			]
+		}
+		,"tipoSangue": {
+			"name": "tipoSangue",
+			"values": [
+				"A",
+				"B",
+				"AB",
+				"O"
+			]
+		}
+		,"tipoUsuario": {
+			"name": "tipoUsuario",
+			"values": [
+				"DOADOR",
+				"ADMIN"
+			]
+		}
+	},
+	"entities": {
+		"usuario": {
+			"id": "id",
+			"name": "usuario",
+			"customizable": true,
+			"external": false,
+			"slots": {
+				"id": {
+					"name": "id",
+					"type": "string",
+					"format": "uuid",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": true
+				},
+				"nomeCompleto": {
+					"name": "nomeCompleto",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 80
+				},
+				"email": {
+					"name": "email",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 120
+				},
+				"telefone": {
+					"name": "telefone",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 20
+				},
+				"cpf": {
+					"name": "cpf",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 11
+				},
+				"dataNascimento": {
+					"name": "dataNascimento",
+					"type": "date",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"ativo": {
+					"name": "ativo",
+					"type": "boolean",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"default": true
+				},
+				"dataCadastro": {
+					"name": "dataCadastro",
+					"type": "dateTime",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"agendamentos": {
+					"name": "agendamentos",
+					"type": "agendamento",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				},
+				"doacoes": {
+					"name": "doacoes",
+					"type": "doacao",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				},
+				"tipoSangue": {
+					"name": "tipoSangue",
+					"type": "tipoSangue",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"fatorRh": {
+					"name": "fatorRh",
+					"type": "fatorRh",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "double",
+					"thousandSeparator": ".",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "double",
+					"thousandSeparator": ".",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"usuarioCloud": {
+					"name": "usuarioCloud",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 120
+				},
+				"tipoUsuario": {
+					"name": "tipoUsuario",
+					"type": "tipoUsuario",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"cep": {
+					"name": "cep",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 9
+				},
+				"rua": {
+					"name": "rua",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 80
+				},
+				"numero": {
+					"name": "numero",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 10
+				},
+				"complemento": {
+					"name": "complemento",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 60
+				},
+				"bairro": {
+					"name": "bairro",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 40
+				},
+				"cidade": {
+					"name": "cidade",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 40
+				},
+				"uf": {
+					"name": "uf",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 2
+				}
+			},
+			"lookup": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "nomeCompleto",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "email",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "telefone",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cpf",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataNascimento",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "ativo",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataCadastro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "latitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "longitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "usuarioCloud",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoUsuario",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cep",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "rua",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "numero",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "complemento",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "bairro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cidade",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "uf",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"nomeCompleto",
+					"email",
+					"telefone",
+					"cpf",
+					"dataNascimento",
+					"ativo",
+					"dataCadastro",
+					"tipoSangue",
+					"fatorRh",
+					"latitude",
+					"longitude",
+					"usuarioCloud",
+					"tipoUsuario",
+					"cep",
+					"rua",
+					"numero",
+					"complemento",
+					"bairro",
+					"cidade",
+					"uf"
+				]
+			},
+			"advancedSearch": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "nomeCompleto",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "email",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "telefone",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cpf",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataNascimento",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "ativo",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataCadastro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "latitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "longitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "usuarioCloud",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoUsuario",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cep",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "rua",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "numero",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "complemento",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "bairro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cidade",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "uf",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"nomeCompleto",
+					"email",
+					"telefone",
+					"cpf",
+					"dataNascimento",
+					"ativo",
+					"dataCadastro",
+					"tipoSangue",
+					"fatorRh",
+					"latitude",
+					"longitude",
+					"usuarioCloud",
+					"tipoUsuario",
+					"cep",
+					"rua",
+					"numero",
+					"complemento",
+					"bairro",
+					"cidade",
+					"uf"
+				]
+			},
+			"relationships": {
+				"doacao": [
+					{
+						"type": "aggregation",
+						"attribute": "doacoes",
+						"ownerEntity": "usuario",
+						"entityName": "doacao",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						}
+					}
+				]
+				,"agendamento": [
+					{
+						"type": "composition",
+						"attribute": "agendamentos",
+						"ownerEntity": "usuario",
+						"entityName": "agendamento",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHora",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "status",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "observacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "motivoStatus",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCriacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "token",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenExpiraEm",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenUsadoEm",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHora",
+								"status",
+								"observacao",
+								"motivoStatus",
+								"dataCriacao",
+								"dataAtualizacao",
+								"token",
+								"tokenExpiraEm",
+								"tokenUsadoEm"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHora",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "status",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "observacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "motivoStatus",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCriacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "token",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenExpiraEm",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenUsadoEm",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHora",
+								"status",
+								"observacao",
+								"motivoStatus",
+								"dataCriacao",
+								"dataAtualizacao",
+								"token",
+								"tokenExpiraEm",
+								"tokenUsadoEm"
+							]
+						}
+					}
+				]
+			}
+		},
+		"hemocentro": {
+			"id": "id",
+			"name": "hemocentro",
+			"customizable": true,
+			"external": false,
+			"slots": {
+				"id": {
+					"name": "id",
+					"type": "string",
+					"format": "uuid",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": true
+				},
+				"nome": {
+					"name": "nome",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 60
+				},
+				"rua": {
+					"name": "rua",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 60
+				},
+				"numero": {
+					"name": "numero",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 10
+				},
+				"bairro": {
+					"name": "bairro",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 40
+				},
+				"cidade": {
+					"name": "cidade",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 40
+				},
+				"uf": {
+					"name": "uf",
+					"type": "string",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 2
+				},
+				"cep": {
+					"name": "cep",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 9
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "double",
+					"thousandSeparator": ".",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "double",
+					"thousandSeparator": ".",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"telefone": {
+					"name": "telefone",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 20
+				},
+				"ativo": {
+					"name": "ativo",
+					"type": "boolean",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"default": true
+				},
+				"agendamentos": {
+					"name": "agendamentos",
+					"type": "agendamento",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				},
+				"doacoes": {
+					"name": "doacoes",
+					"type": "doacao",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				},
+				"estoques": {
+					"name": "estoques",
+					"type": "estoque",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				}
+			},
+			"lookup": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "nome",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "rua",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "numero",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "bairro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cidade",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "uf",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cep",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "latitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "longitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "telefone",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "ativo",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"nome",
+					"rua",
+					"numero",
+					"bairro",
+					"cidade",
+					"uf",
+					"cep",
+					"latitude",
+					"longitude",
+					"telefone",
+					"ativo"
+				]
+			},
+			"advancedSearch": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "nome",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "rua",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "numero",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "bairro",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cidade",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "uf",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "cep",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "latitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "longitude",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "telefone",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "ativo",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"nome",
+					"rua",
+					"numero",
+					"bairro",
+					"cidade",
+					"uf",
+					"cep",
+					"latitude",
+					"longitude",
+					"telefone",
+					"ativo"
+				]
+			},
+			"relationships": {
+				"estoque": [
+					{
+						"type": "aggregation",
+						"attribute": "estoques",
+						"ownerEntity": "hemocentro",
+						"entityName": "estoque",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "quantidadeMl",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "minimoMl",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"tipoSangue",
+								"fatorRh",
+								"quantidadeMl",
+								"minimoMl",
+								"dataAtualizacao"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "quantidadeMl",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "minimoMl",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"tipoSangue",
+								"fatorRh",
+								"quantidadeMl",
+								"minimoMl",
+								"dataAtualizacao"
+							]
+						}
+					}
+				]
+				,"doacao": [
+					{
+						"type": "aggregation",
+						"attribute": "doacoes",
+						"ownerEntity": "hemocentro",
+						"entityName": "doacao",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						}
+					}
+				]
+				,"agendamento": [
+					{
+						"type": "aggregation",
+						"attribute": "agendamentos",
+						"ownerEntity": "hemocentro",
+						"entityName": "agendamento",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHora",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "status",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "observacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "motivoStatus",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCriacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "token",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenExpiraEm",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenUsadoEm",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHora",
+								"status",
+								"observacao",
+								"motivoStatus",
+								"dataCriacao",
+								"dataAtualizacao",
+								"token",
+								"tokenExpiraEm",
+								"tokenUsadoEm"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHora",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "status",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "observacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "motivoStatus",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCriacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataAtualizacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "token",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenExpiraEm",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tokenUsadoEm",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHora",
+								"status",
+								"observacao",
+								"motivoStatus",
+								"dataCriacao",
+								"dataAtualizacao",
+								"token",
+								"tokenExpiraEm",
+								"tokenUsadoEm"
+							]
+						}
+					}
+				]
+			}
+		},
+		"agendamento": {
+			"id": "id",
+			"name": "agendamento",
+			"customizable": true,
+			"external": false,
+			"slots": {
+				"id": {
+					"name": "id",
+					"type": "string",
+					"format": "uuid",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": true
+				},
+				"dataHora": {
+					"name": "dataHora",
+					"type": "dateTime",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"status": {
+					"name": "status",
+					"type": "statusAgendamento",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"observacao": {
+					"name": "observacao",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 150
+				},
+				"motivoStatus": {
+					"name": "motivoStatus",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 150
+				},
+				"dataCriacao": {
+					"name": "dataCriacao",
+					"type": "dateTime",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"dataAtualizacao": {
+					"name": "dataAtualizacao",
+					"type": "dateTime",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"token": {
+					"name": "token",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 80
+				},
+				"tokenExpiraEm": {
+					"name": "tokenExpiraEm",
+					"type": "dateTime",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"tokenUsadoEm": {
+					"name": "tokenUsadoEm",
+					"type": "dateTime",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"usuario": {
+					"name": "usuario",
+					"type": "usuario",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"hemocentro": {
+					"name": "hemocentro",
+					"type": "hemocentro",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"doacoes": {
+					"name": "doacoes",
+					"type": "doacao",
+					"optional": true,
+					"hidden": false,
+					"multivalued": true,
+					"readOnly": false
+				}
+			},
+			"lookup": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataHora",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "status",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "observacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "motivoStatus",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataCriacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataAtualizacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "token",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tokenExpiraEm",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tokenUsadoEm",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"dataHora",
+					"status",
+					"observacao",
+					"motivoStatus",
+					"dataCriacao",
+					"dataAtualizacao",
+					"token",
+					"tokenExpiraEm",
+					"tokenUsadoEm"
+				]
+			},
+			"advancedSearch": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataHora",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "status",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "observacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "motivoStatus",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataCriacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataAtualizacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "token",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tokenExpiraEm",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tokenUsadoEm",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"dataHora",
+					"status",
+					"observacao",
+					"motivoStatus",
+					"dataCriacao",
+					"dataAtualizacao",
+					"token",
+					"tokenExpiraEm",
+					"tokenUsadoEm"
+				]
+			},
+			"relationships": {
+				"doacao": [
+					{
+						"type": "composition",
+						"attribute": "doacoes",
+						"ownerEntity": "agendamento",
+						"entityName": "doacao",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": true,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataHoraConfirmacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "responsavelValidacao",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"dataHoraConfirmacao",
+								"responsavelValidacao",
+								"tipoSangue",
+								"fatorRh"
+							]
+						}
+					}
+				]
+				,"hemocentro": [
+					{
+						"type": "aggregation",
+						"attribute": "hemocentro",
+						"ownerEntity": "hemocentro",
+						"entityName": "hemocentro",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": false,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						}
+					}
+				]
+			}
+		},
+		"doacao": {
+			"id": "id",
+			"name": "doacao",
+			"customizable": true,
+			"external": false,
+			"slots": {
+				"id": {
+					"name": "id",
+					"type": "string",
+					"format": "uuid",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": true
+				},
+				"dataHoraConfirmacao": {
+					"name": "dataHoraConfirmacao",
+					"type": "dateTime",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"responsavelValidacao": {
+					"name": "responsavelValidacao",
+					"type": "string",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"maxLength": 55
+				},
+				"usuario": {
+					"name": "usuario",
+					"type": "usuario",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"hemocentro": {
+					"name": "hemocentro",
+					"type": "hemocentro",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"agendamento": {
+					"name": "agendamento",
+					"type": "agendamento",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"tipoSangue": {
+					"name": "tipoSangue",
+					"type": "tipoSangue",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"fatorRh": {
+					"name": "fatorRh",
+					"type": "fatorRh",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				}
+			},
+			"lookup": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataHoraConfirmacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "responsavelValidacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"dataHoraConfirmacao",
+					"responsavelValidacao",
+					"tipoSangue",
+					"fatorRh"
+				]
+			},
+			"advancedSearch": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataHoraConfirmacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "responsavelValidacao",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"dataHoraConfirmacao",
+					"responsavelValidacao",
+					"tipoSangue",
+					"fatorRh"
+				]
+			},
+			"relationships": {
+				"hemocentro": [
+					{
+						"type": "aggregation",
+						"attribute": "hemocentro",
+						"ownerEntity": "hemocentro",
+						"entityName": "hemocentro",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": false,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						}
+					}
+				]
+				,"usuario": [
+					{
+						"type": "aggregation",
+						"attribute": "usuario",
+						"ownerEntity": "usuario",
+						"entityName": "usuario",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": false,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nomeCompleto",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "email",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cpf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataNascimento",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCadastro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "usuarioCloud",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoUsuario",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "complemento",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nomeCompleto",
+								"email",
+								"telefone",
+								"cpf",
+								"dataNascimento",
+								"ativo",
+								"dataCadastro",
+								"tipoSangue",
+								"fatorRh",
+								"latitude",
+								"longitude",
+								"usuarioCloud",
+								"tipoUsuario",
+								"cep",
+								"rua",
+								"numero",
+								"complemento",
+								"bairro",
+								"cidade",
+								"uf"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nomeCompleto",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "email",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cpf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataNascimento",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "dataCadastro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoSangue",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "fatorRh",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "usuarioCloud",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "tipoUsuario",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "complemento",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nomeCompleto",
+								"email",
+								"telefone",
+								"cpf",
+								"dataNascimento",
+								"ativo",
+								"dataCadastro",
+								"tipoSangue",
+								"fatorRh",
+								"latitude",
+								"longitude",
+								"usuarioCloud",
+								"tipoUsuario",
+								"cep",
+								"rua",
+								"numero",
+								"complemento",
+								"bairro",
+								"cidade",
+								"uf"
+							]
+						}
+					}
+				]
+			}
+		},
+		"estoque": {
+			"id": "id",
+			"name": "estoque",
+			"customizable": true,
+			"external": false,
+			"slots": {
+				"id": {
+					"name": "id",
+					"type": "string",
+					"format": "uuid",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": true
+				},
+				"tipoSangue": {
+					"name": "tipoSangue",
+					"type": "tipoSangue",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"fatorRh": {
+					"name": "fatorRh",
+					"type": "fatorRh",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"quantidadeMl": {
+					"name": "quantidadeMl",
+					"type": "integer",
+					"thousandSeparator": ".",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"minValue": 0
+				},
+				"minimoMl": {
+					"name": "minimoMl",
+					"type": "integer",
+					"thousandSeparator": ".",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false,
+					"minValue": 0
+				},
+				"dataAtualizacao": {
+					"name": "dataAtualizacao",
+					"type": "dateTime",
+					"optional": false,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				},
+				"hemocentro": {
+					"name": "hemocentro",
+					"type": "hemocentro",
+					"optional": true,
+					"hidden": false,
+					"multivalued": false,
+					"readOnly": false
+				}
+			},
+			"lookup": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "quantidadeMl",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "minimoMl",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataAtualizacao",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"tipoSangue",
+					"fatorRh",
+					"quantidadeMl",
+					"minimoMl",
+					"dataAtualizacao"
+				]
+			},
+			"advancedSearch": {
+				"searchFields": [
+					{
+						"name": "id",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "tipoSangue",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "fatorRh",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "quantidadeMl",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "minimoMl",
+						"optional": true,
+						"multiple": false
+					},
+					{
+						"name": "dataAtualizacao",
+						"optional": true,
+						"multiple": false
+					}
+				],
+				"displayFields": [
+					"id",
+					"tipoSangue",
+					"fatorRh",
+					"quantidadeMl",
+					"minimoMl",
+					"dataAtualizacao"
+				]
+			},
+			"relationships": {
+				"hemocentro": [
+					{
+						"type": "aggregation",
+						"attribute": "hemocentro",
+						"ownerEntity": "hemocentro",
+						"entityName": "hemocentro",
+						"optional": true,
+						"filterDependent": false,
+						"multivalued": false,
+						"lookup": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						},
+						"advancedSearch": {
+							"searchFields": [
+								{
+									"name": "id",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "nome",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "rua",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "numero",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "bairro",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cidade",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "uf",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "cep",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "latitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "longitude",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "telefone",
+									"optional": true,
+									"multiple": false
+								},
+								{
+									"name": "ativo",
+									"optional": true,
+									"multiple": false
+								}
+							],
+							"displayFields": [
+								"id",
+								"nome",
+								"rua",
+								"numero",
+								"bairro",
+								"cidade",
+								"uf",
+								"cep",
+								"latitude",
+								"longitude",
+								"telefone",
+								"ativo"
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	"translations": {
+		"my_domain.my_service.agendamento": "agendamento e status da doacao",
+		"my_domain.my_service.agendamento_id": "",
+		"my_domain.my_service.agendamento_data_hora": "",
+		"my_domain.my_service.agendamento_status": "",
+		"my_domain.my_service.agendamento_observacao": "",
+		"my_domain.my_service.agendamento_motivo_status": "",
+		"my_domain.my_service.agendamento_data_criacao": "",
+		"my_domain.my_service.agendamento_data_atualizacao": "",
+		"my_domain.my_service.agendamento_token": "",
+		"my_domain.my_service.agendamento_token_expira_em": "",
+		"my_domain.my_service.agendamento_token_usado_em": "",
+		"my_domain.my_service.agendamento_usuario": "",
+		"my_domain.my_service.agendamento_hemocentro": "",
+		"my_domain.my_service.agendamento_doacoes": "",
+		"my_domain.my_service.doacao": "",
+		"my_domain.my_service.doacao_id": "",
+		"my_domain.my_service.doacao_data_hora_confirmacao": "",
+		"my_domain.my_service.doacao_responsavel_validacao": "",
+		"my_domain.my_service.doacao_usuario": "",
+		"my_domain.my_service.doacao_hemocentro": "",
+		"my_domain.my_service.doacao_agendamento": "",
+		"my_domain.my_service.doacao_tipo_sangue": "",
+		"my_domain.my_service.doacao_fator_rh": "",
+		"my_domain.my_service.estoque": "controle de estoque por hemocentro",
+		"my_domain.my_service.estoque_id": "",
+		"my_domain.my_service.estoque_tipo_sangue": "",
+		"my_domain.my_service.estoque_fator_rh": "",
+		"my_domain.my_service.estoque_quantidade_ml": "",
+		"my_domain.my_service.estoque_minimo_ml": "",
+		"my_domain.my_service.estoque_data_atualizacao": "",
+		"my_domain.my_service.estoque_hemocentro": "",
+		"my_domain.my_service.fator_rh_negativo": "",
+		"my_domain.my_service.fator_rh_positivo": "",
+		"my_domain.my_service.hemocentro": "",
+		"my_domain.my_service.hemocentro_id": "",
+		"my_domain.my_service.hemocentro_nome": "",
+		"my_domain.my_service.hemocentro_rua": "",
+		"my_domain.my_service.hemocentro_numero": "",
+		"my_domain.my_service.hemocentro_bairro": "",
+		"my_domain.my_service.hemocentro_cidade": "",
+		"my_domain.my_service.hemocentro_uf": "",
+		"my_domain.my_service.hemocentro_cep": "",
+		"my_domain.my_service.hemocentro_latitude": "",
+		"my_domain.my_service.hemocentro_longitude": "",
+		"my_domain.my_service.hemocentro_telefone": "",
+		"my_domain.my_service.hemocentro_ativo": "",
+		"my_domain.my_service.hemocentro_agendamentos": "",
+		"my_domain.my_service.hemocentro_doacoes": "",
+		"my_domain.my_service.hemocentro_estoques": "",
+		"my_domain.my_service.status_agendamento_pendente": "",
+		"my_domain.my_service.status_agendamento_confirmado": "",
+		"my_domain.my_service.status_agendamento_cancelado": "",
+		"my_domain.my_service.status_agendamento_compareceu": "",
+		"my_domain.my_service.status_agendamento_naocompareceu": "",
+		"my_domain.my_service.tipo_sangue_a": "",
+		"my_domain.my_service.tipo_sangue_b": "",
+		"my_domain.my_service.tipo_sangue_ab": "",
+		"my_domain.my_service.tipo_sangue_o": "",
+		"my_domain.my_service.tipo_usuario_doador": "",
+		"my_domain.my_service.tipo_usuario_admin": "",
+		"my_domain.my_service.usuario": "entidades principais",
+		"my_domain.my_service.usuario_id": "",
+		"my_domain.my_service.usuario_nome_completo": "",
+		"my_domain.my_service.usuario_email": "",
+		"my_domain.my_service.usuario_telefone": "",
+		"my_domain.my_service.usuario_cpf": "",
+		"my_domain.my_service.usuario_data_nascimento": "",
+		"my_domain.my_service.usuario_ativo": "",
+		"my_domain.my_service.usuario_data_cadastro": "",
+		"my_domain.my_service.usuario_agendamentos": "",
+		"my_domain.my_service.usuario_doacoes": "",
+		"my_domain.my_service.usuario_tipo_sangue": "",
+		"my_domain.my_service.usuario_fator_rh": "",
+		"my_domain.my_service.usuario_latitude": "",
+		"my_domain.my_service.usuario_longitude": "",
+		"my_domain.my_service.usuario_usuario_cloud": "",
+		"my_domain.my_service.usuario_tipo_usuario": "",
+		"my_domain.my_service.usuario_cep": "",
+		"my_domain.my_service.usuario_rua": "",
+		"my_domain.my_service.usuario_numero": "",
+		"my_domain.my_service.usuario_complemento": "",
+		"my_domain.my_service.usuario_bairro": "",
+		"my_domain.my_service.usuario_cidade": "",
+		"my_domain.my_service.usuario_uf": ""
+	}
+}

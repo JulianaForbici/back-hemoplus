@@ -1,0 +1,4 @@
+# Project exclude paths
+/java/client/target/
+/java/impl/target/
+/java/server/target/

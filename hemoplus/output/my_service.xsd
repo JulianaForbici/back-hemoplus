@@ -1,0 +1,1732 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.senior.com.br/my_domain/my_service"
+    targetNamespace="http://www.senior.com.br/my_domain/my_service"
+    elementFormDefault="qualified">
+    
+    <xsd:attribute name="deprecated" type="xsd:string" default=""/>
+    <xsd:attribute name="anonymous" type="xsd:boolean" default="false"/>
+    
+    <xsd:attribute name="i18n" type="xsd:boolean" default="false"/>
+    
+    <!-- Public types -->
+    <xsd:simpleType name="fatorRh">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NEGATIVO"/>
+            <xsd:enumeration value="POSITIVO"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="tipoSangue">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="A"/>
+            <xsd:enumeration value="B"/>
+            <xsd:enumeration value="AB"/>
+            <xsd:enumeration value="O"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="tipoUsuario">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="DOADOR"/>
+            <xsd:enumeration value="ADMIN"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="statusAgendamento">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="PENDENTE"/>
+            <xsd:enumeration value="CONFIRMADO"/>
+            <xsd:enumeration value="CANCELADO"/>
+            <xsd:enumeration value="COMPARECEU"/>
+            <xsd:enumeration value="NAO_COMPARECEU"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:complexType name="retorno">
+        <xsd:sequence>
+            <xsd:element name="mensagem" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="codigo" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="contemErro" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="false" readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="pontoMapa">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="tipo" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="nome" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="latitude" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="longitude" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dadosMapa">
+        <xsd:sequence>
+            <xsd:element name="usuario" type="pontoMapa" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for hemocentros -->
+            <xsd:element name="hemocentros" minOccurs="1" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="pontoMapa" minOccurs="1" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dashboardResumoAgendamentos">
+        <xsd:sequence>
+            <xsd:element name="total" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="pendentes" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="confirmados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="cancelados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="compareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="naoCompareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="taxaComparecimento" type="xsd:double" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dashboardSerieDia">
+        <xsd:sequence>
+            <xsd:element name="dia" type="xsd:date" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="total" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="confirmados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="cancelados" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="compareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="naoCompareceu" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="usuario">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="nomeCompleto"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="80" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="email"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="120" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="telefone"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="20" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="cpf"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="11" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="dataNascimento" type="xsd:date" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="ativo" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="true" readOnly="false">
+            </xsd:element>
+            <xsd:element name="dataCadastro" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for agendamentos -->
+            <xsd:element name="agendamentos" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="agendamento" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- collection wrapper for doacoes -->
+            <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="latitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="longitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="usuarioCloud"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="120" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="tipoUsuario" type="tipoUsuario" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="cep"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="9" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="rua"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="80" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="numero"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="10" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="complemento"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="60" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="bairro"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="40" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="cidade"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="40" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="uf"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="2" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="hemocentro">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="nome"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="60" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="rua"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="60" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="numero"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="10" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="bairro"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="40" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="cidade"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="40" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="uf"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="2" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="cep"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="9" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="latitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="longitude" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="telefone"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="20" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="ativo" type="xsd:boolean" minOccurs="0" maxOccurs="1" default="true" readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for agendamentos -->
+            <xsd:element name="agendamentos" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="agendamento" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- collection wrapper for doacoes -->
+            <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- collection wrapper for estoques -->
+            <xsd:element name="estoques" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="estoque" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="agendamento">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="dataHora" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="status" type="statusAgendamento" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="observacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="150" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="motivoStatus"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="150" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="dataCriacao" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="dataAtualizacao" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="token"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="80" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="tokenExpiraEm" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="tokenUsadoEm" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for doacoes -->
+            <xsd:element name="doacoes" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="doacao" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="doacao">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="dataHoraConfirmacao" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="responsavelValidacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:string">
+            		<xsd:maxLength value="55" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="estoque">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:uuid" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="fatorRh" type="fatorRh" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="quantidadeMl"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:long">
+            		<xsd:minInclusive value="0" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="minimoMl"  minOccurs="1" maxOccurs="1"  readOnly="false">
+            <xsd:simpleType>
+            	<xsd:restriction base="xsd:long">
+            		<xsd:minInclusive value="0" />
+            	</xsd:restriction>
+            </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="dataAtualizacao" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="hemocentro" type="hemocentro" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="userNotificationKind">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Operational"/>
+            <xsd:enumeration value="Management"/>
+            <xsd:enumeration value="News"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="userNotificationPriority">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Error"/>
+            <xsd:enumeration value="Alert"/>
+            <xsd:enumeration value="None"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:complexType name="notifyUserEventPayload">
+        <xsd:sequence>
+            <xsd:element name="notificationClass" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="notificationOrigin" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="notificationKind" type="userNotificationKind" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="notificationPriority" type="userNotificationPriority" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="notificationSubject" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="notificationContent" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="sourceDomain" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="sourceService" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="destinationUser" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="link" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="eventEmailFormat">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="HTML"/>
+            <xsd:enumeration value="PLAIN_TEXT"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:complexType name="emailNotifyUserEventPayload">
+        <xsd:complexContent>
+            <xsd:extension base="notifyUserEventPayload">
+                <xsd:sequence>
+                    <xsd:element name="from" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                    <!-- collection wrapper for sendTo -->
+                    <xsd:element name="sendTo" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="format" type="eventEmailFormat" minOccurs="0" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="pushNotifyUserEventPayload">
+        <xsd:complexContent>
+            <xsd:extension base="notifyUserEventPayload">
+                <xsd:sequence>
+                    <xsd:element name="applicationId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="blobReference">
+        <xsd:sequence>
+            <xsd:element name="domainName" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="serviceName" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="targetObjectId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="targetCopyId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="basicErrorPayload">
+        <xsd:sequence>
+            <xsd:element name="message" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorCode" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="fieldType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="BINARY"/>
+            <xsd:enumeration value="BOOLEAN"/>
+            <xsd:enumeration value="DATE"/>
+            <xsd:enumeration value="DATETIME"/>
+            <xsd:enumeration value="LOCALDATETIME"/>
+            <xsd:enumeration value="DOUBLE"/>
+            <xsd:enumeration value="ENUM"/>
+            <xsd:enumeration value="INTEGER"/>
+            <xsd:enumeration value="MONEY"/>
+            <xsd:enumeration value="STRING"/>
+            <xsd:enumeration value="TIME"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="fileFormat">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CSV"/>
+            <xsd:enumeration value="FLAT"/>
+            <xsd:enumeration value="JSON"/>
+            <xsd:enumeration value="XML"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="hookFunction">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="BEFORE_PARSE"/>
+            <xsd:enumeration value="BEFORE_CONVERSION"/>
+            <xsd:enumeration value="ON_ERROR"/>
+            <xsd:enumeration value="VALIDATE"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="eventType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CHUNK"/>
+            <xsd:enumeration value="DOWNLOAD"/>
+            <xsd:enumeration value="ERROR"/>
+            <xsd:enumeration value="FINISH"/>
+            <xsd:enumeration value="START"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="errorStrategy">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CALL_SCRIPT"/>
+            <xsd:enumeration value="IGNORE"/>
+            <xsd:enumeration value="STOP"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="status">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="DONE"/>
+            <xsd:enumeration value="DONE_WITH_ERRORS"/>
+            <xsd:enumeration value="DOWNLOADING"/>
+            <xsd:enumeration value="ERROR"/>
+            <xsd:enumeration value="NOT_STARTED"/>
+            <xsd:enumeration value="RUNNING"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:simpleType name="errorType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CONVERT_ERROR"/>
+            <xsd:enumeration value="SERVICE_ERROR"/>
+        </xsd:restriction>
+     </xsd:simpleType>
+    <xsd:complexType name="importError">
+        <xsd:sequence>
+            <xsd:element name="errorType" type="errorType" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="lineNumber" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="bean" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="message" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="exceptionClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="fielddto">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="fieldType" type="fieldType" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="start" type="xsd:long" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="size" type="xsd:long" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="maskPattern" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="hookdto">
+        <xsd:sequence>
+            <xsd:element name="hookFunction" type="hookFunction" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="script" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="layoutdto">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="fileFormat" type="fileFormat" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorStrategy" type="errorStrategy" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="delimiter" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="skipLines" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for fields -->
+            <xsd:element name="fields" minOccurs="1" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="fielddto" minOccurs="1" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- collection wrapper for hooks -->
+            <xsd:element name="hooks" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="hookdto" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="importReport">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="startTime" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="endTime" type="xsd:dateTime" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="beanClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="serviceClass" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="sucessCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorsCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="filteredCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="skippedCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <!-- collection wrapper for importErrors -->
+            <xsd:element name="importErrors" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="item" type="importError" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="exportEventStatus">
+        <xsd:sequence>
+            <xsd:element name="importerId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="eventType" type="eventType" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="recordCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="importEventStatus">
+        <xsd:sequence>
+            <xsd:element name="importerId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="eventType" type="eventType" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="status" type="status" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="recordCount" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="importReport" type="importReport" minOccurs="0" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="exportConfig">
+        <xsd:sequence>
+            <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="async" type="xsd:boolean" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorStrategy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="importConfig">
+        <xsd:sequence>
+            <xsd:element name="uri" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="layout" type="layoutdto" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="async" type="xsd:boolean" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="batchSize" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="errorStrategy" type="errorStrategy" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dependency">
+        <xsd:sequence>
+            <xsd:element name="domain" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="service" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+            <xsd:element name="version" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="uuid">
+        <xsd:restriction base="xsd:string">
+        	<xsd:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </xsd:restriction>
+     </xsd:simpleType>
+    
+    <!-- Message payload elements for signals -->
+    
+    <!-- Message input/output elements for commands -->
+    <xsd:element name="createBulkAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for entities -->
+                <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkAgendamentoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="marcarNaoCompareceuPorPeriodo">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="agendamentoId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="marcarNaoCompareceuPorPeriodoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="confirmarAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="agendamentoId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="confirmarAgendamentoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateUsuario_Agendamentos">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createMergeUsuario">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="listHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listHemocentroOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="hemocentro" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarTiposEmFalta">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarTiposEmFaltaOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for resultado -->
+                <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="validarDoacaoPorToken">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="token"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                <xsd:simpleType>
+                	<xsd:restriction base="xsd:string">
+                		<xsd:maxLength value="80" />
+                	</xsd:restriction>
+                </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="responsavelValidacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                <xsd:simpleType>
+                	<xsd:restriction base="xsd:string">
+                		<xsd:maxLength value="55" />
+                	</xsd:restriction>
+                </xsd:simpleType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="validarDoacaoPorTokenOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="doacao" type="doacao" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateDoacao">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="deleteUsuario_Agendamentos" type="uuid"/>
+    <xsd:element name="updateMergeDoacao">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="updateEstoque">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createAgendamento">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createUsuario_Agendamentos">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="updateHemocentro">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="updateAgendamento">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createMergeHemocentro">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="deleteHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createMergeUsuario_Agendamentos">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="listUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listUsuarioOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="usuario" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listAgendamentoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="getMetadata">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="metadataFormat" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="getMetadataOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="metadata" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateMergeAgendamento_Doacoes">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="updateMergeAgendamento">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createMergeDoacao">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createBulkUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for entities -->
+                <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="usuario" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkUsuarioOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="retrieveEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createHemocentro">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="deleteDoacao">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="retrieveAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createMergeEstoque">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="updateAgendamento_Doacoes">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="importEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="importEstoqueOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="deleteEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listEstoqueOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarPontosMapa">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarPontosMapaOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="dados" type="dadosMapa" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="helloWorld">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="who" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="helloWorldOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="helloWorldMessage" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="buscarDashboardResumoAgendamentos">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="buscarDashboardResumoAgendamentosOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="resumo" type="dashboardResumoAgendamentos" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="buscarDashboardSerieAgendamentosPorDia">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="buscarDashboardSerieAgendamentosPorDiaOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for itens -->
+                <xsd:element name="itens" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="dashboardSerieDia" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listDoacao">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listDoacaoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createMergeAgendamento_Doacoes">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createEstoque">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="listAgendamento_Doacoes">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listAgendamento_DoacoesOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="ajustarEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="tipoSangue" type="tipoSangue" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="fatorRh" type="fatorRh" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="deltaMl" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="minimoMl" type="xsd:double" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="ajustarEstoqueOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="estoque" type="estoque" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateUsuario">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="exportHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="exportHemocentroOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="odata">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createDoacao">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="listarAgendamentosPorPeriodo">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="status" type="statusAgendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="dataInicio" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="dataFim" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarAgendamentosPorPeriodoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for resultado -->
+                <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateMergeUsuario_Agendamentos">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="retrieveAgendamento_Doacoes" type="uuid"/>
+    <xsd:element name="importUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="importUsuarioOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="criarAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="usuarioId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="dataHora" type="xsd:dateTime" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="observacao"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                <xsd:simpleType>
+                	<xsd:restriction base="xsd:string">
+                		<xsd:maxLength value="150" />
+                	</xsd:restriction>
+                </xsd:simpleType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="criarAgendamentoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateMergeEstoque">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createBulkHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for entities -->
+                <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="hemocentro" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkHemocentroOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="deleteUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="exportEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="exportEstoqueOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="getDependencies">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="getDependenciesOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for dependencies -->
+                <xsd:element name="dependencies" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="dependency" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarEstoquePorHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="hemocentroId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listarEstoquePorHemocentroOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for resultado -->
+                <xsd:element name="resultado" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="retrieveDoacao">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkDoacao">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for entities -->
+                <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="doacao" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkDoacaoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateMergeUsuario">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="importHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="importConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="importHemocentroOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="importJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="deleteAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createMergeAgendamento">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="buscarUsuarioCloud">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="usuarioCloud" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="buscarUsuarioCloudOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="usuario" type="usuario" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="cancelarAgendamento">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="agendamentoId" type="xsd:string" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="motivo"  minOccurs="0" maxOccurs="1"  readOnly="false">
+                <xsd:simpleType>
+                	<xsd:restriction base="xsd:string">
+                		<xsd:maxLength value="150" />
+                	</xsd:restriction>
+                </xsd:simpleType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="cancelarAgendamentoOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retorno" type="retorno" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="agendamento" type="agendamento" minOccurs="0" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createUsuario">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="createBulkEstoque">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for entities -->
+                <xsd:element name="entities" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="estoque" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createBulkEstoqueOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="createAgendamento_Doacoes">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="deleteAgendamento_Doacoes" type="uuid"/>
+    <xsd:element name="retrieveUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="exportUsuario">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="exportConfig" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="exportUsuarioOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="exportJobId" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="updateMergeHemocentro">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="listUsuario_Agendamentos">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="offset" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="size" type="xsd:long" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="orderBy" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <xsd:element name="filter" type="xsd:string" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+                <!-- collection wrapper for displayFields -->
+                <xsd:element name="displayFields" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="listUsuario_AgendamentosOutput">
+        <xsd:complexType>
+            <xsd:sequence>
+                <!-- collection wrapper for contents -->
+                <xsd:element name="contents" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="item" type="agendamento" minOccurs="1" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="retrieveUsuario_Agendamentos" type="uuid"/>
+    <xsd:element name="retrieveHemocentro">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="id" type="xsd:uuid" minOccurs="1" maxOccurs="1"  readOnly="false">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

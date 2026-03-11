@@ -1,0 +1,122 @@
+"resources": [
+	{
+		"name": "usuario",
+		"label": "platform.authorization.my_domain_my_service_entities_usuario_label",
+		"description": "platform.authorization.my_domain_my_service_entities_usuario_description",
+		"URI": "res://senior.com.br/my_domain/my_service/entities/usuario",
+		"actions" : [
+		    {
+		    	"name": "Incluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_usuario_action_incluir_label"
+		    },
+		    {
+		    	"name": "Editar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_usuario_action_editar_label"
+		    },
+		    {
+		    	"name": "Excluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_usuario_action_excluir_label"
+		    },
+		    {
+		    	"name": "Visualizar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_usuario_action_visualizar_label"
+		    }
+		]
+	},
+	{
+		"name": "hemocentro",
+		"label": "platform.authorization.my_domain_my_service_entities_hemocentro_label",
+		"description": "platform.authorization.my_domain_my_service_entities_hemocentro_description",
+		"URI": "res://senior.com.br/my_domain/my_service/entities/hemocentro",
+		"actions" : [
+		    {
+		    	"name": "Incluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_hemocentro_action_incluir_label"
+		    },
+		    {
+		    	"name": "Editar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_hemocentro_action_editar_label"
+		    },
+		    {
+		    	"name": "Excluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_hemocentro_action_excluir_label"
+		    },
+		    {
+		    	"name": "Visualizar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_hemocentro_action_visualizar_label"
+		    }
+		]
+	},
+	{
+		"name": "agendamento",
+		"label": "platform.authorization.my_domain_my_service_entities_agendamento_label",
+		"description": "platform.authorization.my_domain_my_service_entities_agendamento_description",
+		"URI": "res://senior.com.br/my_domain/my_service/entities/agendamento",
+		"actions" : [
+		    {
+		    	"name": "Incluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_agendamento_action_incluir_label"
+		    },
+		    {
+		    	"name": "Editar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_agendamento_action_editar_label"
+		    },
+		    {
+		    	"name": "Excluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_agendamento_action_excluir_label"
+		    },
+		    {
+		    	"name": "Visualizar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_agendamento_action_visualizar_label"
+		    }
+		]
+	},
+	{
+		"name": "doacao",
+		"label": "platform.authorization.my_domain_my_service_entities_doacao_label",
+		"description": "platform.authorization.my_domain_my_service_entities_doacao_description",
+		"URI": "res://senior.com.br/my_domain/my_service/entities/doacao",
+		"actions" : [
+		    {
+		    	"name": "Incluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_doacao_action_incluir_label"
+		    },
+		    {
+		    	"name": "Editar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_doacao_action_editar_label"
+		    },
+		    {
+		    	"name": "Excluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_doacao_action_excluir_label"
+		    },
+		    {
+		    	"name": "Visualizar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_doacao_action_visualizar_label"
+		    }
+		]
+	},
+	{
+		"name": "estoque",
+		"label": "platform.authorization.my_domain_my_service_entities_estoque_label",
+		"description": "platform.authorization.my_domain_my_service_entities_estoque_description",
+		"URI": "res://senior.com.br/my_domain/my_service/entities/estoque",
+		"actions" : [
+		    {
+		    	"name": "Incluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_estoque_action_incluir_label"
+		    },
+		    {
+		    	"name": "Editar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_estoque_action_editar_label"
+		    },
+		    {
+		    	"name": "Excluir",
+		    	"label": "platform.authorization.my_domain_my_service_entities_estoque_action_excluir_label"
+		    },
+		    {
+		    	"name": "Visualizar",
+		    	"label": "platform.authorization.my_domain_my_service_entities_estoque_action_visualizar_label"
+		    }
+		]
+	}
+]

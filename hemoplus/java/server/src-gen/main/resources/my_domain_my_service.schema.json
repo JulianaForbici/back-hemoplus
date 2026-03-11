@@ -1,0 +1,863 @@
+{
+    "id": "my_domain.my_service",
+    "properties": {
+        "retorno" : {
+        	"type" : "object",
+        	"id" : "retorno",
+        	"properties" : {
+            	"mensagem" : {
+            		"type": "string"
+            	},
+            	"codigo" : {
+            		"type": "string"
+            	},
+            	"contemErro" : {
+            		"type": "boolean",
+            		"default": false
+            	}
+        	},
+        	"required" : ["mensagem"]
+        }
+        ,
+        "pontoMapa" : {
+        	"type" : "object",
+        	"id" : "pontoMapa",
+        	"properties" : {
+            	"id" : {
+            		"type": "string"
+            	},
+            	"tipo" : {
+            		"type": "string"
+            	},
+            	"nome" : {
+            		"type": "string"
+            	},
+            	"latitude" : {
+            		"type": "number",
+            		"format": "double"
+            	},
+            	"longitude" : {
+            		"type": "number",
+            		"format": "double"
+            	}
+        	},
+        	"required" : ["id","tipo","latitude","longitude"]
+        }
+        ,
+        "dadosMapa" : {
+        	"type" : "object",
+        	"id" : "dadosMapa",
+        	"properties" : {
+            	"usuario" : {
+            		"$ref": "#/properties/pontoMapa"
+            	},
+            	"hemocentros" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/pontoMapa"
+            		  , "minimum": 1
+            		}
+            	}
+        	},
+        	"required" : ["hemocentros"]
+        }
+        ,
+        "dashboardResumoAgendamentos" : {
+        	"type" : "object",
+        	"id" : "dashboardResumoAgendamentos",
+        	"properties" : {
+            	"total" : {
+            		"type": "integer"
+            	},
+            	"pendentes" : {
+            		"type": "integer"
+            	},
+            	"confirmados" : {
+            		"type": "integer"
+            	},
+            	"cancelados" : {
+            		"type": "integer"
+            	},
+            	"compareceu" : {
+            		"type": "integer"
+            	},
+            	"naoCompareceu" : {
+            		"type": "integer"
+            	},
+            	"taxaComparecimento" : {
+            		"type": "number",
+            		"format": "double"
+            	}
+        	},
+        	"required" : ["total","pendentes","confirmados","cancelados","compareceu","naoCompareceu","taxaComparecimento"]
+        }
+        ,
+        "dashboardSerieDia" : {
+        	"type" : "object",
+        	"id" : "dashboardSerieDia",
+        	"properties" : {
+            	"dia" : {
+            		"type": "string",
+            		"format": "date"
+            	},
+            	"total" : {
+            		"type": "integer"
+            	},
+            	"confirmados" : {
+            		"type": "integer"
+            	},
+            	"cancelados" : {
+            		"type": "integer"
+            	},
+            	"compareceu" : {
+            		"type": "integer"
+            	},
+            	"naoCompareceu" : {
+            		"type": "integer"
+            	}
+        	},
+        	"required" : ["dia","total","confirmados","cancelados","compareceu","naoCompareceu"]
+        }
+        ,
+        "usuario" : {
+        	"type" : "object",
+        	"id" : "usuario",
+        	"properties" : {
+            	"id" : {
+            		"type": "string",
+            		"format": "uuid"
+            	},
+            	"nomeCompleto" : {
+            		"type": "string",
+            		"maxLength": 80
+            	},
+            	"email" : {
+            		"type": "string",
+            		"maxLength": 120
+            	},
+            	"telefone" : {
+            		"type": "string",
+            		"maxLength": 20
+            	},
+            	"cpf" : {
+            		"type": "string",
+            		"maxLength": 11
+            	},
+            	"dataNascimento" : {
+            		"type": "string",
+            		"format": "date"
+            	},
+            	"ativo" : {
+            		"type": "boolean",
+            		"default": true
+            	},
+            	"dataCadastro" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"agendamentos" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/agendamento"
+            		}
+            	},
+            	"doacoes" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/doacao"
+            		}
+            	},
+            	"tipoSangue" : {
+            		"type": "string",
+            		"enum": ["A","B","AB","O"]
+            	},
+            	"fatorRh" : {
+            		"type": "string",
+            		"enum": ["NEGATIVO","POSITIVO"]
+            	},
+            	"latitude" : {
+            		"type": "number",
+            		"format": "double"
+            	},
+            	"longitude" : {
+            		"type": "number",
+            		"format": "double"
+            	},
+            	"usuarioCloud" : {
+            		"type": "string",
+            		"maxLength": 120
+            	},
+            	"tipoUsuario" : {
+            		"type": "string",
+            		"enum": ["DOADOR","ADMIN"]
+            	},
+            	"cep" : {
+            		"type": "string",
+            		"maxLength": 9
+            	},
+            	"rua" : {
+            		"type": "string",
+            		"maxLength": 80
+            	},
+            	"numero" : {
+            		"type": "string",
+            		"maxLength": 10
+            	},
+            	"complemento" : {
+            		"type": "string",
+            		"maxLength": 60
+            	},
+            	"bairro" : {
+            		"type": "string",
+            		"maxLength": 40
+            	},
+            	"cidade" : {
+            		"type": "string",
+            		"maxLength": 40
+            	},
+            	"uf" : {
+            		"type": "string",
+            		"maxLength": 2
+            	}
+        	},
+        	"required" : ["nomeCompleto","email","telefone","cpf","tipoSangue","fatorRh","usuarioCloud","tipoUsuario"]
+        }
+        ,
+        "hemocentro" : {
+        	"type" : "object",
+        	"id" : "hemocentro",
+        	"properties" : {
+            	"id" : {
+            		"type": "string",
+            		"format": "uuid"
+            	},
+            	"nome" : {
+            		"type": "string",
+            		"maxLength": 60
+            	},
+            	"rua" : {
+            		"type": "string",
+            		"maxLength": 60
+            	},
+            	"numero" : {
+            		"type": "string",
+            		"maxLength": 10
+            	},
+            	"bairro" : {
+            		"type": "string",
+            		"maxLength": 40
+            	},
+            	"cidade" : {
+            		"type": "string",
+            		"maxLength": 40
+            	},
+            	"uf" : {
+            		"type": "string",
+            		"maxLength": 2
+            	},
+            	"cep" : {
+            		"type": "string",
+            		"maxLength": 9
+            	},
+            	"latitude" : {
+            		"type": "number",
+            		"format": "double"
+            	},
+            	"longitude" : {
+            		"type": "number",
+            		"format": "double"
+            	},
+            	"telefone" : {
+            		"type": "string",
+            		"maxLength": 20
+            	},
+            	"ativo" : {
+            		"type": "boolean",
+            		"default": true
+            	},
+            	"agendamentos" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/agendamento"
+            		}
+            	},
+            	"doacoes" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/doacao"
+            		}
+            	},
+            	"estoques" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/estoque"
+            		}
+            	}
+        	},
+        	"required" : ["nome","rua","cidade","uf"]
+        }
+        ,
+        "agendamento" : {
+        	"type" : "object",
+        	"id" : "agendamento",
+        	"properties" : {
+            	"id" : {
+            		"type": "string",
+            		"format": "uuid"
+            	},
+            	"dataHora" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"status" : {
+            		"type": "string",
+            		"enum": ["PENDENTE","CONFIRMADO","CANCELADO","COMPARECEU","NAO_COMPARECEU"]
+            	},
+            	"observacao" : {
+            		"type": "string",
+            		"maxLength": 150
+            	},
+            	"motivoStatus" : {
+            		"type": "string",
+            		"maxLength": 150
+            	},
+            	"dataCriacao" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"dataAtualizacao" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"token" : {
+            		"type": "string",
+            		"maxLength": 80
+            	},
+            	"tokenExpiraEm" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"tokenUsadoEm" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"usuario" : {
+            		"$ref": "#/properties/usuario"
+            	},
+            	"hemocentro" : {
+            		"$ref": "#/properties/hemocentro"
+            	},
+            	"doacoes" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/doacao"
+            		}
+            	}
+        	},
+        	"required" : ["dataHora","status"]
+        }
+        ,
+        "doacao" : {
+        	"type" : "object",
+        	"id" : "doacao",
+        	"properties" : {
+            	"id" : {
+            		"type": "string",
+            		"format": "uuid"
+            	},
+            	"dataHoraConfirmacao" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"responsavelValidacao" : {
+            		"type": "string",
+            		"maxLength": 55
+            	},
+            	"usuario" : {
+            		"$ref": "#/properties/usuario"
+            	},
+            	"hemocentro" : {
+            		"$ref": "#/properties/hemocentro"
+            	},
+            	"agendamento" : {
+            		"$ref": "#/properties/agendamento"
+            	},
+            	"tipoSangue" : {
+            		"type": "string",
+            		"enum": ["A","B","AB","O"]
+            	},
+            	"fatorRh" : {
+            		"type": "string",
+            		"enum": ["NEGATIVO","POSITIVO"]
+            	}
+        	},
+        	"required" : ["dataHoraConfirmacao","tipoSangue","fatorRh"]
+        }
+        ,
+        "estoque" : {
+        	"type" : "object",
+        	"id" : "estoque",
+        	"properties" : {
+            	"id" : {
+            		"type": "string",
+            		"format": "uuid"
+            	},
+            	"tipoSangue" : {
+            		"type": "string",
+            		"enum": ["A","B","AB","O"]
+            	},
+            	"fatorRh" : {
+            		"type": "string",
+            		"enum": ["NEGATIVO","POSITIVO"]
+            	},
+            	"quantidadeMl" : {
+            		"type": "integer",
+            		"minimum": 0
+            	},
+            	"minimoMl" : {
+            		"type": "integer",
+            		"minimum": 0
+            	},
+            	"dataAtualizacao" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"hemocentro" : {
+            		"$ref": "#/properties/hemocentro"
+            	}
+        	},
+        	"required" : ["tipoSangue","fatorRh","quantidadeMl","minimoMl","dataAtualizacao"]
+        }
+        ,
+        "notifyUserEventPayload" : {
+        	"type" : "object",
+        	"id" : "notifyUserEventPayload",
+        	"properties" : {
+            	"notificationClass" : {
+            		"type": "string"
+            	},
+            	"notificationOrigin" : {
+            		"type": "string"
+            	},
+            	"notificationKind" : {
+            		"type": "string",
+            		"enum": ["Operational","Management","News"]
+            	},
+            	"notificationPriority" : {
+            		"type": "string",
+            		"enum": ["Error","Alert","None"]
+            	},
+            	"notificationSubject" : {
+            		"type": "string"
+            	},
+            	"notificationContent" : {
+            		"type": "string"
+            	},
+            	"sourceDomain" : {
+            		"type": "string"
+            	},
+            	"sourceService" : {
+            		"type": "string"
+            	},
+            	"destinationUser" : {
+            		"type": "string"
+            	},
+            	"link" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["notificationKind","notificationPriority","notificationSubject","notificationContent","sourceDomain","sourceService","destinationUser"]
+        }
+        ,
+        "emailNotifyUserEventPayload" : {
+        	"type" : "object",
+        	"id" : "emailNotifyUserEventPayload",
+        	"properties" : {
+            	"notificationClass" : {
+            		"type": "string"
+            	},
+            	"notificationOrigin" : {
+            		"type": "string"
+            	},
+            	"notificationKind" : {
+            		"type": "string",
+            		"enum": ["Operational","Management","News"]
+            	},
+            	"notificationPriority" : {
+            		"type": "string",
+            		"enum": ["Error","Alert","None"]
+            	},
+            	"notificationSubject" : {
+            		"type": "string"
+            	},
+            	"notificationContent" : {
+            		"type": "string"
+            	},
+            	"sourceDomain" : {
+            		"type": "string"
+            	},
+            	"sourceService" : {
+            		"type": "string"
+            	},
+            	"destinationUser" : {
+            		"type": "string"
+            	},
+            	"link" : {
+            		"type": "string"
+            	},
+            	"from" : {
+            		"type": "string"
+            	},
+            	"sendTo" : {
+            		"type": "array",
+            		"items": {
+            		  "type": "string"
+            		}
+            	},
+            	"format" : {
+            		"type": "string",
+            		"enum": ["HTML","PLAIN_TEXT"]
+            	}
+        	},
+        	"required" : ["notificationKind","notificationPriority","notificationSubject","notificationContent","sourceDomain","sourceService","destinationUser","from"]
+        }
+        ,
+        "pushNotifyUserEventPayload" : {
+        	"type" : "object",
+        	"id" : "pushNotifyUserEventPayload",
+        	"properties" : {
+            	"notificationClass" : {
+            		"type": "string"
+            	},
+            	"notificationOrigin" : {
+            		"type": "string"
+            	},
+            	"notificationKind" : {
+            		"type": "string",
+            		"enum": ["Operational","Management","News"]
+            	},
+            	"notificationPriority" : {
+            		"type": "string",
+            		"enum": ["Error","Alert","None"]
+            	},
+            	"notificationSubject" : {
+            		"type": "string"
+            	},
+            	"notificationContent" : {
+            		"type": "string"
+            	},
+            	"sourceDomain" : {
+            		"type": "string"
+            	},
+            	"sourceService" : {
+            		"type": "string"
+            	},
+            	"destinationUser" : {
+            		"type": "string"
+            	},
+            	"link" : {
+            		"type": "string"
+            	},
+            	"applicationId" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["notificationKind","notificationPriority","notificationSubject","notificationContent","sourceDomain","sourceService","destinationUser","applicationId"]
+        }
+        ,
+        "blobReference" : {
+        	"type" : "object",
+        	"id" : "blobReference",
+        	"properties" : {
+            	"domainName" : {
+            		"type": "string"
+            	},
+            	"serviceName" : {
+            		"type": "string"
+            	},
+            	"targetObjectId" : {
+            		"type": "string"
+            	},
+            	"targetCopyId" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["targetObjectId"]
+        }
+        ,
+        "basicErrorPayload" : {
+        	"type" : "object",
+        	"id" : "basicErrorPayload",
+        	"properties" : {
+            	"message" : {
+            		"type": "string"
+            	},
+            	"errorCode" : {
+            		"type": "string"
+            	}
+        	}}
+        ,
+        "importError" : {
+        	"type" : "object",
+        	"id" : "importError",
+        	"properties" : {
+            	"errorType" : {
+            		"type": "string",
+            		"enum": ["CONVERT_ERROR","SERVICE_ERROR"]
+            	},
+            	"lineNumber" : {
+            		"type": "integer"
+            	},
+            	"bean" : {
+            		"type": "string"
+            	},
+            	"message" : {
+            		"type": "string"
+            	},
+            	"exceptionClass" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["errorType","lineNumber","bean","message","exceptionClass"]
+        }
+        ,
+        "fielddto" : {
+        	"type" : "object",
+        	"id" : "fielddto",
+        	"properties" : {
+            	"id" : {
+            		"type": "integer"
+            	},
+            	"name" : {
+            		"type": "string"
+            	},
+            	"fieldType" : {
+            		"type": "string",
+            		"enum": ["BINARY","BOOLEAN","DATE","DATETIME","LOCALDATETIME","DOUBLE","ENUM","INTEGER","MONEY","STRING","TIME"]
+            	},
+            	"start" : {
+            		"type": "integer"
+            	},
+            	"size" : {
+            		"type": "integer"
+            	},
+            	"maskPattern" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["id","name","fieldType"]
+        }
+        ,
+        "hookdto" : {
+        	"type" : "object",
+        	"id" : "hookdto",
+        	"properties" : {
+            	"hookFunction" : {
+            		"type": "string",
+            		"enum": ["BEFORE_PARSE","BEFORE_CONVERSION","ON_ERROR","VALIDATE"]
+            	},
+            	"script" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["hookFunction","script"]
+        }
+        ,
+        "layoutdto" : {
+        	"type" : "object",
+        	"id" : "layoutdto",
+        	"properties" : {
+            	"id" : {
+            		"type": "integer"
+            	},
+            	"description" : {
+            		"type": "string"
+            	},
+            	"fileFormat" : {
+            		"type": "string",
+            		"enum": ["CSV","FLAT","JSON","XML"]
+            	},
+            	"errorStrategy" : {
+            		"type": "string",
+            		"enum": ["CALL_SCRIPT","IGNORE","STOP"]
+            	},
+            	"delimiter" : {
+            		"type": "string"
+            	},
+            	"skipLines" : {
+            		"type": "integer"
+            	},
+            	"fields" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/fielddto"
+            		  , "minimum": 1
+            		}
+            	},
+            	"hooks" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/hookdto"
+            		}
+            	}
+        	},
+        	"required" : ["id","description","fileFormat","errorStrategy","skipLines","fields"]
+        }
+        ,
+        "importReport" : {
+        	"type" : "object",
+        	"id" : "importReport",
+        	"properties" : {
+            	"id" : {
+            		"type": "string"
+            	},
+            	"startTime" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"endTime" : {
+            		"type": "string",
+            		"format": "date-time"
+            	},
+            	"uri" : {
+            		"type": "string"
+            	},
+            	"beanClass" : {
+            		"type": "string"
+            	},
+            	"serviceClass" : {
+            		"type": "string"
+            	},
+            	"layout" : {
+            		"$ref": "#/properties/layoutdto"
+            	},
+            	"sucessCount" : {
+            		"type": "integer"
+            	},
+            	"errorsCount" : {
+            		"type": "integer"
+            	},
+            	"filteredCount" : {
+            		"type": "integer"
+            	},
+            	"skippedCount" : {
+            		"type": "integer"
+            	},
+            	"importErrors" : {
+            		"type": "array",
+            		"items": {
+            		  "$ref": "#/properties/importError"
+            		}
+            	}
+        	},
+        	"required" : ["id","startTime","endTime","uri","beanClass","serviceClass","layout","sucessCount","errorsCount","filteredCount","skippedCount"]
+        }
+        ,
+        "exportEventStatus" : {
+        	"type" : "object",
+        	"id" : "exportEventStatus",
+        	"properties" : {
+            	"importerId" : {
+            		"type": "string"
+            	},
+            	"eventType" : {
+            		"type": "string",
+            		"enum": ["CHUNK","DOWNLOAD","ERROR","FINISH","START"]
+            	},
+            	"recordCount" : {
+            		"type": "integer"
+            	}
+        	},
+        	"required" : ["importerId","eventType","recordCount"]
+        }
+        ,
+        "importEventStatus" : {
+        	"type" : "object",
+        	"id" : "importEventStatus",
+        	"properties" : {
+            	"importerId" : {
+            		"type": "string"
+            	},
+            	"eventType" : {
+            		"type": "string",
+            		"enum": ["CHUNK","DOWNLOAD","ERROR","FINISH","START"]
+            	},
+            	"status" : {
+            		"type": "string",
+            		"enum": ["DONE","DONE_WITH_ERRORS","DOWNLOADING","ERROR","NOT_STARTED","RUNNING"]
+            	},
+            	"errorMessage" : {
+            		"type": "string"
+            	},
+            	"recordCount" : {
+            		"type": "integer"
+            	},
+            	"importReport" : {
+            		"$ref": "#/properties/importReport"
+            	}
+        	},
+        	"required" : ["importerId","eventType","status","recordCount"]
+        }
+        ,
+        "exportConfig" : {
+        	"type" : "object",
+        	"id" : "exportConfig",
+        	"properties" : {
+            	"uri" : {
+            		"type": "string"
+            	},
+            	"layout" : {
+            		"$ref": "#/properties/layoutdto"
+            	},
+            	"async" : {
+            		"type": "boolean"
+            	},
+            	"errorStrategy" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["uri","layout","async","errorStrategy"]
+        }
+        ,
+        "importConfig" : {
+        	"type" : "object",
+        	"id" : "importConfig",
+        	"properties" : {
+            	"uri" : {
+            		"type": "string"
+            	},
+            	"layout" : {
+            		"$ref": "#/properties/layoutdto"
+            	},
+            	"async" : {
+            		"type": "boolean"
+            	},
+            	"batchSize" : {
+            		"type": "integer"
+            	},
+            	"errorStrategy" : {
+            		"type": "string",
+            		"enum": ["CALL_SCRIPT","IGNORE","STOP"]
+            	}
+        	},
+        	"required" : ["uri","layout","async","batchSize","errorStrategy"]
+        }
+        ,
+        "dependency" : {
+        	"type" : "object",
+        	"id" : "dependency",
+        	"properties" : {
+            	"domain" : {
+            		"type": "string"
+            	},
+            	"service" : {
+            		"type": "string"
+            	},
+            	"version" : {
+            		"type": "string"
+            	}
+        	},
+        	"required" : ["domain","service","version"]
+        }
+    }
+}
